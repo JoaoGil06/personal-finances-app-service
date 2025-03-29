@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/main.ts",
+    "start:debug": "nodemon --exec \"node --inspect --require ts-node/register src/main.ts\"",
     "test": "npm run tsc -- --noEmit && jest",
     "tsc": "tsc"
   },

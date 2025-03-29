@@ -49,13 +49,31 @@ export default class User extends Entity {
       throw new Error("Name is required");
     }
 
-    // if (dataValidator.validateEmail(this._email)) {
-    //   throw new Error("Email is not valid");
-    // }
+    if (!dataValidator.validateEmail(this._email)) {
+      throw new Error("Email is not valid");
+    }
 
-    // if (dataValidator.validatePassword(this._password)) {
-    //   throw new Error("Password is not strong");
-    // }
+    if (!dataValidator.validatePassword(this._password)) {
+      throw new Error("Password is not strong");
+    }
+  }
+
+  changeName(name: string) {
+    this._name = name;
+
+    this.validate();
+  }
+
+  changeEmail(email: string) {
+    this._email = email;
+
+    this.validate();
+  }
+
+  changePassword(password: string) {
+    this._password = password;
+
+    this.validate();
   }
 
   addAccount(accountId: string) {

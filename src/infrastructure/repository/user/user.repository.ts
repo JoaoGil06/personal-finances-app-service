@@ -11,14 +11,43 @@ export default class UserRepository implements UserRepositoryInterface {
       password: entity.password,
     });
   }
-  update(entity: User): Promise<void> {
-    throw new Error("Method not implemented.");
+  async update(entity: User): Promise<void> {
+    await UserModel.update(
+      {
+        name: entity.name,
+        email: entity.email,
+        password: entity.password,
+      },
+      {
+        where: { id: entity.id },
+      }
+    );
   }
-  delete(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async delete(id: string): Promise<void> {
+    await UserModel.destroy({
+      where: {
+        id,
+      },
+    });
   }
-  find(id: string): Promise<User> {
-    throw new Error("Method not implemented.");
+  async find(id: string): Promise<User> {
+    let userModel;
+    try {
+      userModel = await UserModel.findOne({
+        where: {
+          id,
+        },
+        rejectOnEmpty: true,
+      });
+    } catch (error) {
+      return null;
+    }
+
+    const { id: userId, name, email: userEmail, password } = userModel;
+
+    const user = new User(userId, name, userEmail, password);
+
+    return user;
   }
   async findAll(): Promise<User[]> {
     const userModel = await UserModel.findAll();
@@ -46,7 +75,7 @@ export default class UserRepository implements UserRepositoryInterface {
         rejectOnEmpty: true,
       });
     } catch (error) {
-      throw new Error("User not found");
+      return null;
     }
 
     const { id, name, email: userEmail, password } = userModel;

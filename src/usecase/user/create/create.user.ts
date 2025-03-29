@@ -16,7 +16,7 @@ export default class CreateUserUseCase {
   }
 
   async execute(input: InputCreateUserDto): Promise<OutputCreateUserDto> {
-    const existingUser = this.userRepository.findByEmail(input.email);
+    const existingUser = await this.userRepository.findByEmail(input.email);
 
     if (existingUser) {
       throw new Error("This email is already registered.");
