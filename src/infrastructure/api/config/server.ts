@@ -1,3 +1,4 @@
+require("dotenv").config();
 import { app } from "./express";
 import { Sequelize } from "sequelize-typescript";
 import UserModel from "../../db/sequelize/model/user.model";
