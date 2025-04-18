@@ -9,4 +9,5 @@ export interface OutputUpdateUserDto {
   id: string;
   name: string;
   email: string;
+  accounts: string[];
 }

@@ -34,6 +34,7 @@ export default class UpdateUserUseCase {
       id: user.id,
       name: user.name,
       email: user.email,
+      accounts: user.accountIds,
     };
   }
 }

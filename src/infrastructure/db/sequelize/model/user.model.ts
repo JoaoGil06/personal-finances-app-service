@@ -1,4 +1,11 @@
-import { Model, Column, PrimaryKey, Table } from "sequelize-typescript";
+import {
+  Model,
+  Column,
+  PrimaryKey,
+  Table,
+  HasMany,
+} from "sequelize-typescript";
+import AccountModel from "./account.model";
 
 @Table({
   tableName: "users",
@@ -16,4 +23,7 @@ export default class UserModel extends Model {
 
   @Column({ allowNull: false })
   declare password: string;
+
+  @HasMany(() => AccountModel)
+  declare accounts: AccountModel[];
 }

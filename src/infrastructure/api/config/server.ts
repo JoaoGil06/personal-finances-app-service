@@ -2,6 +2,8 @@ require("dotenv").config();
 import { app } from "./express";
 import { Sequelize } from "sequelize-typescript";
 import UserModel from "../../db/sequelize/model/user.model";
+import AccountModel from "../../db/sequelize/model/account.model";
+import TransactionModel from "../../db/sequelize/model/transaction.model";
 
 export let sequelize: Sequelize;
 
@@ -12,7 +14,7 @@ async function setupDb() {
     logging: false,
   });
 
-  await sequelize.addModels([UserModel]);
+  await sequelize.addModels([UserModel, AccountModel, TransactionModel]);
   await sequelize.sync();
 }
 

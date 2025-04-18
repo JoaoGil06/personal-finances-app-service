@@ -8,4 +8,13 @@ export class DataValidator implements DataValidatorInterface {
   validatePassword(value: string): Boolean {
     return Validator.isStrongPassword(value);
   }
+  validateNumber(value: number): boolean {
+    if (typeof value !== "number") {
+      return false;
+    }
+    if (!Number.isFinite(value)) {
+      return false;
+    }
+    return true;
+  }
 }

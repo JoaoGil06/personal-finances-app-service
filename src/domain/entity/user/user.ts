@@ -42,7 +42,7 @@ export default class User extends Entity {
     const dataValidator = new DataValidator();
 
     if (this._id.length === 0) {
-      throw new Error("ID is required");
+      throw new Error("User ID is required");
     }
 
     if (this._name.length === 0) {
@@ -80,5 +80,9 @@ export default class User extends Entity {
     if (!this._accounts.includes(accountId)) {
       this._accounts.push(accountId);
     }
+  }
+
+  removeAccount(accountId: string) {
+    // Ainda não está implementado
   }
 }

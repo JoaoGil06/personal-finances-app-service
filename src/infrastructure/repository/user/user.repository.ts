@@ -1,5 +1,6 @@
 import User from "../../../domain/entity/user/user";
 import UserRepositoryInterface from "../../../domain/repository/user-repository.interface";
+import AccountModel from "../../db/sequelize/model/account.model";
 import UserModel from "../../db/sequelize/model/user.model";
 
 export default class UserRepository implements UserRepositoryInterface {
@@ -37,15 +38,30 @@ export default class UserRepository implements UserRepositoryInterface {
         where: {
           id,
         },
+        /* Include -> Aliado ao @hasMany (no model)
+            - Vai fazer um JOIN e procurar na tabela Accounts onde existe o user_id com o ID */
+        include: [{ model: AccountModel }],
         rejectOnEmpty: true,
       });
     } catch (error) {
       return null;
     }
 
-    const { id: userId, name, email: userEmail, password } = userModel;
+    const {
+      id: user_id,
+      name,
+      email: userEmail,
+      password,
+      accounts,
+    } = userModel;
 
-    const user = new User(userId, name, userEmail, password);
+    const user = new User(user_id, name, userEmail, password);
+
+    if (accounts && Array.isArray(accounts)) {
+      accounts.forEach((account: AccountModel, index) => {
+        user.addAccount(account.id);
+      });
+    }
 
     return user;
   }
