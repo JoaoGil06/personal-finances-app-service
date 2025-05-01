@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    readOnly: true # Só irá aparecer nas respostas
+  account_id:
+    type: string
+    readOnly: true # Só irá aparecer nas respostas
+  budget_id:
+    type: string
+    readOnly: true # Só irá aparecer nas respostas
+  user_id:
+    type: string
+    readOnly: true # Só irá aparecer nas respostas
+  amount:
+    type: number
+  date:
+    type: string
+    format: date
+  type:
+    type: string
+    example: deposit | withdraw

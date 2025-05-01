@@ -1,0 +1,30 @@
+post:
+  summary: Criar uma account para um utilizador
+  tags: [Accounts]
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      description: ID do Utilizador
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../components/schemas/account/account.yaml"
+        examples:
+          user:
+            value:
+              name: Joao
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/account/account.yaml"
+    "500":
+      description: This user doesnt exist.

@@ -1,0 +1,30 @@
+openapi: 3.1.0 # versão da especificação
+info:
+  title: API para personal finances
+  version: 1.0.0
+  description: Esta API tem como objectivo gerir a app de personal finances
+servers:
+  - url: http://localhost:3000
+    description: API de teste local
+  - url: http://Aindanaotem.com
+    description: API Hospedada
+paths: # endpoints
+  /login:
+    $ref: "./paths/auth/auth.yaml"
+  /user:
+    $ref: "./paths/user/user.yaml"
+  /user/{id}:
+    $ref: "./paths/user/user_{id}.yaml"
+  /account:
+    $ref: "./paths/account/account.yaml"
+  /account/{id}:
+    $ref: "./paths/account/account_{id}.yaml"
+  /account/{user_id}:
+    $ref: "./paths/account/account_{user_id}.yaml"
+  /account/list-by-user/{user_id}:
+    $ref: "./paths/account/account_list-by-user_{user_id}.yaml"
+components: # schemas, security, etc.
+  schemas:
+  securitySchemes:
+    bearerAuth:
+      $ref: "./components/security/bearerAuth.yaml"

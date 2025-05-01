@@ -1,0 +1,15 @@
+get:
+  summary: Receber todas as accounts
+  tags: [Accounts]
+  security:
+    - bearerAuth: []
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accounts:
+                $ref: "../../components/schemas/account/paginated-account.yaml"

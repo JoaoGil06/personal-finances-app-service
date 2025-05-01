@@ -1,0 +1,1466 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "API para personal finances",
+    "version": "1.0.0",
+    "description": "Esta API tem como objectivo gerir a app de personal finances"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "API de teste local"
+    },
+    {
+      "url": "http://Aindanaotem.com",
+      "description": "API Hospedada"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Login de utilizador",
+        "description": "Esta rota é responsável por fazer login de um utilizador",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "email": {
+                    "type": "string",
+                    "writeOnly": true
+                  }
+                }
+              },
+              "examples": {
+                "auth": {
+                  "value": {
+                    "password": "password01",
+                    "email": "teste1@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "password": {
+                      "type": "string",
+                      "writeOnly": true
+                    },
+                    "email": {
+                      "type": "string",
+                      "writeOnly": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "This e-mail isn't registered."
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "summary": "Receber uma lista de utilizadores",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "readOnly": true
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "password": {
+                        "type": "string",
+                        "writeOnly": true
+                      },
+                      "email": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unathourized - quando não existe um token"
+          },
+          "403": {
+            "description": "Forbidden - quando o token não é válido"
+          }
+        }
+      },
+      "post": {
+        "summary": "Criação de utilizador",
+        "description": "Esta rota é responsável por registar um novo utilizador",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Joao",
+                    "password": "password01",
+                    "email": "teste1@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string",
+                      "writeOnly": true
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "This email is already registered."
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "summary": "Receber um utilizador",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do utilizador",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string",
+                      "writeOnly": true
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unathourized - quando não existe um token"
+          },
+          "403": {
+            "description": "Forbidden - quando o token não é válido"
+          },
+          "500": {
+            "description": "This user doesn't exist"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Editar parcialmente um utilizador (os campos que desejarmos)",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do utilizador",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Joao",
+                    "password": "password01",
+                    "email": "teste1@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string",
+                      "writeOnly": true
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "This user id doesnt match any user."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Apagar um utilizador",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do utilizador",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string",
+                      "writeOnly": true
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "This user id doesnt match any user."
+          }
+        }
+      }
+    },
+    "/account": {
+      "get": {
+        "summary": "Receber todas as accounts",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accounts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "readOnly": true
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "balance": {
+                            "type": "number",
+                            "readOnly": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "readOnly": true
+                          },
+                          "_links": {
+                            "type": "object",
+                            "properties": {
+                              "self": {
+                                "type": "string",
+                                "format": "uri",
+                                "readOnly": true
+                              },
+                              "transactions": {
+                                "type": "string",
+                                "format": "uri",
+                                "readOnly": true
+                              },
+                              "prev": {
+                                "type": "string",
+                                "format": "uri",
+                                "readOnly": true
+                              },
+                              "next": {
+                                "type": "string",
+                                "format": "uri",
+                                "readOnly": true
+                              }
+                            }
+                          },
+                          "transactions": {
+                            "type": "object",
+                            "properties": {
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "readOnly": true
+                                    },
+                                    "account_id": {
+                                      "type": "string",
+                                      "readOnly": true
+                                    },
+                                    "budget_id": {
+                                      "type": "string",
+                                      "readOnly": true
+                                    },
+                                    "user_id": {
+                                      "type": "string",
+                                      "readOnly": true
+                                    },
+                                    "amount": {
+                                      "type": "number"
+                                    },
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "example": "deposit | withdraw"
+                                    }
+                                  }
+                                }
+                              },
+                              "total": {
+                                "type": "number",
+                                "readOnly": true
+                              },
+                              "limit": {
+                                "type": "number",
+                                "readOnly": true
+                              },
+                              "offset": {
+                                "type": "number",
+                                "readOnly": true
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{id}": {
+      "get": {
+        "summary": "Receber uma account",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da Account",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "description": "Incluir transações do utilizador",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "transactions"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Número de transações que queremos incluir",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Inicio do número de transações",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "balance": {
+                      "type": "number",
+                      "readOnly": true
+                    },
+                    "user_id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "transactions": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "prev": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "next": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
+                    },
+                    "transactions": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "account_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "budget_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "user_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "amount": {
+                                "type": "number"
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date"
+                              },
+                              "type": {
+                                "type": "string",
+                                "example": "deposit | withdraw"
+                              }
+                            }
+                          }
+                        },
+                        "total": {
+                          "type": "number",
+                          "readOnly": true
+                        },
+                        "limit": {
+                          "type": "number",
+                          "readOnly": true
+                        },
+                        "offset": {
+                          "type": "number",
+                          "readOnly": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "This account doesnt exist."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Editar parcialmente uma account (os campos que desejarmos)",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da Account",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "balance": {
+                    "type": "number",
+                    "readOnly": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "_links": {
+                    "type": "object",
+                    "properties": {
+                      "self": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                      },
+                      "transactions": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                      },
+                      "prev": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                      },
+                      "next": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                      }
+                    }
+                  },
+                  "transactions": {
+                    "type": "object",
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "readOnly": true
+                            },
+                            "account_id": {
+                              "type": "string",
+                              "readOnly": true
+                            },
+                            "budget_id": {
+                              "type": "string",
+                              "readOnly": true
+                            },
+                            "user_id": {
+                              "type": "string",
+                              "readOnly": true
+                            },
+                            "amount": {
+                              "type": "number"
+                            },
+                            "date": {
+                              "type": "string",
+                              "format": "date"
+                            },
+                            "type": {
+                              "type": "string",
+                              "example": "deposit | withdraw"
+                            }
+                          }
+                        }
+                      },
+                      "total": {
+                        "type": "number",
+                        "readOnly": true
+                      },
+                      "limit": {
+                        "type": "number",
+                        "readOnly": true
+                      },
+                      "offset": {
+                        "type": "number",
+                        "readOnly": true
+                      }
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Joao"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "balance": {
+                      "type": "number",
+                      "readOnly": true
+                    },
+                    "user_id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "transactions": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "prev": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "next": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
+                    },
+                    "transactions": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "account_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "budget_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "user_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "amount": {
+                                "type": "number"
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date"
+                              },
+                              "type": {
+                                "type": "string",
+                                "example": "deposit | withdraw"
+                              }
+                            }
+                          }
+                        },
+                        "total": {
+                          "type": "number",
+                          "readOnly": true
+                        },
+                        "limit": {
+                          "type": "number",
+                          "readOnly": true
+                        },
+                        "offset": {
+                          "type": "number",
+                          "readOnly": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "This account id doesnt match any account"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Apagar uma Account",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da Account",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "balance": {
+                      "type": "number",
+                      "readOnly": true
+                    },
+                    "user_id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "transactions": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "prev": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "next": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
+                    },
+                    "transactions": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "account_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "budget_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "user_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "amount": {
+                                "type": "number"
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date"
+                              },
+                              "type": {
+                                "type": "string",
+                                "example": "deposit | withdraw"
+                              }
+                            }
+                          }
+                        },
+                        "total": {
+                          "type": "number",
+                          "readOnly": true
+                        },
+                        "limit": {
+                          "type": "number",
+                          "readOnly": true
+                        },
+                        "offset": {
+                          "type": "number",
+                          "readOnly": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "This account id doesnt match any account"
+          }
+        }
+      }
+    },
+    "/account/{user_id}": {
+      "post": {
+        "summary": "Criar uma account para um utilizador",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do Utilizador",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "balance": {
+                    "type": "number",
+                    "readOnly": true
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "readOnly": true
+                  },
+                  "_links": {
+                    "type": "object",
+                    "properties": {
+                      "self": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                      },
+                      "transactions": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                      },
+                      "prev": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                      },
+                      "next": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                      }
+                    }
+                  },
+                  "transactions": {
+                    "type": "object",
+                    "properties": {
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "readOnly": true
+                            },
+                            "account_id": {
+                              "type": "string",
+                              "readOnly": true
+                            },
+                            "budget_id": {
+                              "type": "string",
+                              "readOnly": true
+                            },
+                            "user_id": {
+                              "type": "string",
+                              "readOnly": true
+                            },
+                            "amount": {
+                              "type": "number"
+                            },
+                            "date": {
+                              "type": "string",
+                              "format": "date"
+                            },
+                            "type": {
+                              "type": "string",
+                              "example": "deposit | withdraw"
+                            }
+                          }
+                        }
+                      },
+                      "total": {
+                        "type": "number",
+                        "readOnly": true
+                      },
+                      "limit": {
+                        "type": "number",
+                        "readOnly": true
+                      },
+                      "offset": {
+                        "type": "number",
+                        "readOnly": true
+                      }
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Joao"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "balance": {
+                      "type": "number",
+                      "readOnly": true
+                    },
+                    "user_id": {
+                      "type": "string",
+                      "readOnly": true
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "transactions": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "prev": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "next": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
+                    },
+                    "transactions": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "account_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "budget_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "user_id": {
+                                "type": "string",
+                                "readOnly": true
+                              },
+                              "amount": {
+                                "type": "number"
+                              },
+                              "date": {
+                                "type": "string",
+                                "format": "date"
+                              },
+                              "type": {
+                                "type": "string",
+                                "example": "deposit | withdraw"
+                              }
+                            }
+                          }
+                        },
+                        "total": {
+                          "type": "number",
+                          "readOnly": true
+                        },
+                        "limit": {
+                          "type": "number",
+                          "readOnly": true
+                        },
+                        "offset": {
+                          "type": "number",
+                          "readOnly": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "This user doesnt exist."
+          }
+        }
+      }
+    },
+    "/account/list-by-user/{user_id}": {
+      "get": {
+        "summary": "Receber todas as account para um user",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do utilizador",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accounts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "readOnly": true
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "balance": {
+                            "type": "number",
+                            "readOnly": true
+                          },
+                          "user_id": {
+                            "type": "string",
+                            "readOnly": true
+                          },
+                          "_links": {
+                            "type": "object",
+                            "properties": {
+                              "self": {
+                                "type": "string",
+                                "format": "uri",
+                                "readOnly": true
+                              },
+                              "transactions": {
+                                "type": "string",
+                                "format": "uri",
+                                "readOnly": true
+                              },
+                              "prev": {
+                                "type": "string",
+                                "format": "uri",
+                                "readOnly": true
+                              },
+                              "next": {
+                                "type": "string",
+                                "format": "uri",
+                                "readOnly": true
+                              }
+                            }
+                          },
+                          "transactions": {
+                            "type": "object",
+                            "properties": {
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "readOnly": true
+                                    },
+                                    "account_id": {
+                                      "type": "string",
+                                      "readOnly": true
+                                    },
+                                    "budget_id": {
+                                      "type": "string",
+                                      "readOnly": true
+                                    },
+                                    "user_id": {
+                                      "type": "string",
+                                      "readOnly": true
+                                    },
+                                    "amount": {
+                                      "type": "number"
+                                    },
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "example": "deposit | withdraw"
+                                    }
+                                  }
+                                }
+                              },
+                              "total": {
+                                "type": "number",
+                                "readOnly": true
+                              },
+                              "limit": {
+                                "type": "number",
+                                "readOnly": true
+                              },
+                              "offset": {
+                                "type": "number",
+                                "readOnly": true
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "This user doesnt exist."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": null,
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

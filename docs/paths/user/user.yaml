@@ -1,0 +1,40 @@
+get:
+  summary: Receber uma lista de utilizadores
+  tags: [Users]
+  security:
+    - bearerAuth: []
+  responses:
+    "401":
+      description: Unathourized - quando não existe um token
+    "403":
+      description: Forbidden - quando o token não é válido
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/user/paginated-users.yaml"
+post:
+  summary: Criação de utilizador
+  description: Esta rota é responsável por registar um novo utilizador
+  tags: [Users]
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../components/schemas/user/user.yaml"
+        examples:
+          user:
+            value:
+              name: Joao
+              password: password01
+              email: teste1@gmail.com
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/user/user.yaml"
+    "500":
+      description: This email is already registered.

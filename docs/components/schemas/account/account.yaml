@@ -1,0 +1,34 @@
+type: object
+properties:
+  id:
+    type: string
+    readOnly: true # Só irá aparecer nas respostas
+  name:
+    type: string
+  balance:
+    type: number
+    readOnly: true # Só irá aparecer nas respostas
+  user_id:
+    type: string
+    readOnly: true # Só irá aparecer nas respostas
+  _links:
+    type: object
+    properties:
+      self:
+        type: string
+        format: uri
+        readOnly: true # Só irá aparecer nas respostas
+      transactions:
+        type: string
+        format: uri
+        readOnly: true # Só irá aparecer nas respostas
+      prev:
+        type: string
+        format: uri
+        readOnly: true # Só irá aparecer nas respostas
+      next:
+        type: string
+        format: uri
+        readOnly: true # Só irá aparecer nas respostas
+  transactions:
+    $ref: "../transaction/paginated-transactions.yaml"

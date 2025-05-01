@@ -1,0 +1,24 @@
+get:
+  summary: Receber todas as account para um user
+  tags: [Accounts]
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id # Path
+      in: path
+      description: ID do utilizador
+      required: true
+      schema:
+        type: string
+  responses:
+    "500":
+      description: This user doesnt exist.
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accounts:
+                $ref: "../../components/schemas/account/paginated-account.yaml"

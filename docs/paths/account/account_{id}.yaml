@@ -1,0 +1,91 @@
+get:
+  summary: Receber uma account
+  tags: [Accounts]
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id # Path
+      in: path
+      description: ID da Account
+      required: true
+      schema:
+        type: string
+    - name: include # Query
+      in: query
+      description: Incluir transações do utilizador
+      required: false
+      schema:
+        type: string
+        example: transactions
+    - name: limit # Query
+      in: query
+      description: Número de transações que queremos incluir
+      required: false
+      schema:
+        type: string
+    - name: offset # Query
+      in: query
+      description: Inicio do número de transações
+      required: false
+      schema:
+        type: string
+  responses:
+    "500":
+      description: This account doesnt exist.
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/account/account.yaml"
+patch:
+  summary: Editar parcialmente uma account (os campos que desejarmos)
+  tags: [Accounts]
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      description: ID da Account
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../components/schemas/account/account.yaml"
+        examples:
+          user:
+            value:
+              name: Joao
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/account/account.yaml"
+    "500":
+      description: This account id doesnt match any account
+delete:
+  summary: Apagar uma Account
+  tags: [Accounts]
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      description: ID da Account
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/account/account.yaml"
+    "500":
+      description: This account id doesnt match any account

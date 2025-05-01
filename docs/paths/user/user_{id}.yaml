@@ -1,0 +1,78 @@
+get:
+  summary: Receber um utilizador
+  tags: [Users]
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      description: ID do utilizador
+      required: true
+      schema:
+        type: string
+  responses:
+    "401":
+      description: Unathourized - quando não existe um token
+    "403":
+      description: Forbidden - quando o token não é válido
+    "500":
+      description: This user doesn't exist
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/user/user.yaml"
+patch:
+  summary: Editar parcialmente um utilizador (os campos que desejarmos)
+  tags: [Users]
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      description: ID do utilizador
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../components/schemas/user/user.yaml"
+        examples:
+          user:
+            value:
+              name: Joao
+              password: password01
+              email: teste1@gmail.com
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/user/user.yaml"
+    "500":
+      description: This user id doesnt match any user.
+delete:
+  summary: Apagar um utilizador
+  tags: [Users]
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      description: ID do utilizador
+      required: true
+      schema:
+        type: string
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/user/user.yaml"
+    "500":
+      description: This user id doesnt match any user.

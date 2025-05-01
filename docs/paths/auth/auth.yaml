@@ -1,0 +1,23 @@
+post:
+  summary: Login de utilizador
+  description: Esta rota é responsável por fazer login de um utilizador
+  tags: [Auth]
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../components/schemas/auth/auth.yaml"
+        examples:
+          auth:
+            value:
+              password: password01
+              email: teste1@gmail.com
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/auth/auth.yaml"
+    "500":
+      description: This e-mail isn't registered.
