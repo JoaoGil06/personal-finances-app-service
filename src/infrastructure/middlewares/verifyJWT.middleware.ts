@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import { Jsonwebtoken } from "../adapters/jwt.adapter";
+import { JWT_SECRET } from "../constants/env";
 
 const verifyJWT: RequestHandler = (req, res, next): void => {
   const authHeader = req.headers["authorization"];
@@ -9,12 +10,11 @@ const verifyJWT: RequestHandler = (req, res, next): void => {
     return;
   }
 
-  console.log(authHeader);
   const token = authHeader.split(" ")[1];
   const jwt = new Jsonwebtoken();
   jwt.verify({
     token,
-    secretOrPublicKey: process.env.JWT_SECRET,
+    secretOrPublicKey: JWT_SECRET,
     callback: (err) => {
       if (err) return res.sendStatus(403);
 
