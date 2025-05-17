@@ -1,5 +1,5 @@
-import User from "../../../domain/entity/user/user";
 import UserRepositoryInterface from "../../../domain/repository/user-repository.interface";
+import { buildPaginatedResponse } from "../../shared/pagination";
 import { InputListUserDto, OutputListUserDto } from "./list.user.dto";
 
 export default class ListUsersUseCase {
@@ -10,20 +10,28 @@ export default class ListUsersUseCase {
   }
 
   async execute(input: InputListUserDto): Promise<OutputListUserDto> {
-    const users = await this.userRepository.findAll();
-    return OutputMapper.toOutput(users);
-  }
-}
+    const users = await this.userRepository.findAll({
+      limit: input.limit,
+      offset: input.offset,
+    });
 
-export class OutputMapper {
-  static toOutput(users: User[]): OutputListUserDto {
-    return {
-      users: users.map((user) => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        accounts: user.accountIds,
-      })),
-    };
+    const dtoItems = users.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      accounts: user.accountIds,
+    }));
+
+    const baseUrl = `/user`;
+    return buildPaginatedResponse({
+      items: dtoItems,
+      total: users.length,
+      limit: input.limit,
+      offset: input.offset,
+      baseUrl,
+      itemLink: (user) => ({
+        self: `${baseUrl}/${user.id}`,
+      }),
+    });
   }
 }

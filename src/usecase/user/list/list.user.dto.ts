@@ -1,12 +1,16 @@
-export interface InputListUserDto {}
+import { Link, PaginatedResponse } from "../../interfaces/pagination.interface";
+
+export interface InputListUserDto {
+  limit?: number;
+  offset?: number;
+}
 
 type User = {
   id: string;
   name: string;
   email: string;
-  accounts: string[]; // TO - DO: Replace this by an array of accounts (for now we don't have this)
+  accounts: string[];
+  _links: Link;
 };
 
-export interface OutputListUserDto {
-  users: User[];
-}
+export type OutputListUserDto = PaginatedResponse<User>;

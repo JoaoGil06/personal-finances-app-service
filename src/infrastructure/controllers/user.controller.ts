@@ -12,7 +12,12 @@ export async function listUsersController(req: Request, res: Response) {
   const usecase = new ListUsersUseCase(new UserRepository());
 
   try {
-    const output = await usecase.execute({});
+    const dto = {
+      limit: Math.min(parseInt(req.query.limit as string) || 20),
+      offset: parseInt(req.query.offset as string) || 0,
+    };
+
+    const output = await usecase.execute(dto);
     res.status(200).send(output);
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });

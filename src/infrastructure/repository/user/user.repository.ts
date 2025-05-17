@@ -1,4 +1,5 @@
 import User from "../../../domain/entity/user/user";
+import { PaginationOptions } from "../../../domain/repository/repository-interface";
 import UserRepositoryInterface from "../../../domain/repository/user-repository.interface";
 import AccountModel from "../../db/sequelize/model/account.model";
 import UserModel from "../../db/sequelize/model/user.model";
@@ -65,8 +66,12 @@ export default class UserRepository implements UserRepositoryInterface {
 
     return user;
   }
-  async findAll(): Promise<User[]> {
-    const userModel = await UserModel.findAll();
+  async findAll(paginationOptions: PaginationOptions = {}): Promise<User[]> {
+    const userModel = await UserModel.findAll({
+      include: [{ model: AccountModel }], // -> Trazer as accounts através de um Join
+      limit: paginationOptions.limit,
+      offset: paginationOptions.offset,
+    });
 
     const users = userModel.map((userModel) => {
       const user = new User(
@@ -75,6 +80,12 @@ export default class UserRepository implements UserRepositoryInterface {
         userModel.email,
         userModel.password
       );
+
+      if (userModel.accounts && Array.isArray(userModel.accounts)) {
+        userModel.accounts.forEach((acc: AccountModel) =>
+          user.addAccount(acc.id)
+        );
+      }
 
       return user;
     });
