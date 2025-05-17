@@ -1,3 +1,8 @@
+export interface PaginationOptions {
+  limit?: number;
+  offset?: number;
+}
+
 export default interface RepositoryInterface<T> {
   create(entity: T): Promise<void>;
   update(entity: T): Promise<void>;

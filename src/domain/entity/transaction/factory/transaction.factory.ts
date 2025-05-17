@@ -5,12 +5,21 @@ import { TransactionType } from "../transaction.types";
 export default class TransactionFactory {
   public static create(
     amount: number,
+    account_id: string,
+    budget_id: string,
+    user_id: string,
     date: Date,
     type: TransactionType,
-    budget_id: string
+    id = uuid()
   ) {
-    const id = uuid();
-
-    return new Transaction(id, amount, date, type, budget_id);
+    return new Transaction(
+      id,
+      account_id,
+      budget_id,
+      user_id,
+      amount,
+      date,
+      type
+    );
   }
 }

@@ -7,6 +7,7 @@ import {
 } from "sequelize-typescript";
 import UserModel from "./user.model";
 import AccountModel from "./account.model";
+import { TransactionType } from "../../../../domain/entity/transaction/transaction.types";
 
 @Table({
   tableName: "transactions",
@@ -16,9 +17,9 @@ export default class TransactionModel extends Model {
   @Column
   declare id: string;
 
-  // Falta budget ID
+  // TO-DO: Mais tarde adicionar budget ID
 
-  // Falta persona ID
+  // TO-DO: Mais tarde adicionar persona ID
 
   @ForeignKey(() => AccountModel)
   @Column({ allowNull: false })
@@ -35,5 +36,5 @@ export default class TransactionModel extends Model {
   declare amount: number;
 
   @Column({ allowNull: false })
-  declare type: string;
+  declare type: TransactionType;
 }
