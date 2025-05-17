@@ -13,7 +13,11 @@ export async function listAccountsController(req: Request, res: Response) {
   const usecase = new ListAccountsUseCase(new AccountRepository());
 
   try {
-    const output = await usecase.execute({});
+    const dto = {
+      limit: Math.min(parseInt(req.query.limit as string) || 20),
+      offset: parseInt(req.query.offset as string) || 0,
+    };
+    const output = await usecase.execute(dto);
     res.status(200).send(output);
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
@@ -25,11 +29,16 @@ export async function listAccountsByUserIdController(
   req: Request,
   res: Response
 ) {
-  const usecase = new ListAccountsByUserIdUseCase(new AccountRepository());
+  const usecase = new ListAccountsByUserIdUseCase(
+    new AccountRepository(),
+    new UserRepository()
+  );
 
   try {
     const accountDto = {
-      id: req.params.id,
+      user_id: req.params.user_id,
+      limit: Math.min(parseInt(req.query.limit as string) || 20),
+      offset: parseInt(req.query.offset as string) || 0,
     };
 
     const output = await usecase.execute(accountDto);
@@ -46,6 +55,9 @@ export async function getAccountController(req: Request, res: Response) {
   try {
     const accountDto = {
       id: req.params.id,
+      includeTransactions: req.query.include === "transactions",
+      limit: Math.min(parseInt(req.query.limit as string) || 20),
+      offset: parseInt(req.query.offset as string) || 0,
     };
 
     const output = await usecase.execute(accountDto);

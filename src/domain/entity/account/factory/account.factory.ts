@@ -1,14 +1,15 @@
 import { v4 as uuid } from "uuid";
 import Account from "../account";
+import Transaction from "../../transaction/transaction";
 
 export default class AccountFactory {
   public static create(
     name: string = "Conta Principal",
     balance: number = 0,
-    user_id: string
+    user_id: string,
+    transactions: Transaction[] = [],
+    id = uuid()
   ) {
-    const id = uuid();
-
-    return new Account(id, name, balance, user_id);
+    return new Account(id, name, balance, user_id, transactions);
   }
 }

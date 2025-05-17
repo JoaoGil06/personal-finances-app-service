@@ -8,12 +8,14 @@ export default class Account extends Entity {
   private _balance: number;
   private _user_id: string;
   private _transactions: Transaction[];
+  private _total_transactions: number;
 
   constructor(
     id: string,
     name: string = "Conta Principal",
     balance: number = 0,
-    user_id: string
+    user_id: string,
+    transactions: Transaction[] = []
   ) {
     super();
 
@@ -21,6 +23,7 @@ export default class Account extends Entity {
     this._name = name;
     this._balance = balance;
     this._user_id = user_id;
+    this._transactions = transactions;
 
     this.validate();
   }
@@ -43,6 +46,10 @@ export default class Account extends Entity {
 
   get user_id(): string {
     return this._user_id;
+  }
+
+  get total_transaction(): number {
+    return this._total_transactions;
   }
 
   validate() {
@@ -87,5 +94,11 @@ export default class Account extends Entity {
     } else if (transaction.type === TransactionType.WITHDRAW) {
       this._balance -= transaction.amount;
     }
+
+    this._transactions.push(transaction);
+  }
+
+  setTotalTransactions(total_transactions: number) {
+    this._total_transactions = total_transactions;
   }
 }

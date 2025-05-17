@@ -1,7 +1,21 @@
-import Transaction from "../../../domain/entity/transaction/transaction";
+import { TransactionType } from "../../../domain/entity/transaction/transaction.types";
+import { PaginatedResponse } from "../../interfaces/pagination.interface";
+
+type Transaction = {
+  id: string;
+  account_id: string;
+  budget_id: string;
+  user_id: string;
+  amount: number;
+  date: Date;
+  type: TransactionType;
+};
 
 export interface InputGetAccountDto {
   id: string;
+  includeTransactions?: boolean;
+  limit?: number;
+  offset?: number;
 }
 
 export interface OutputGetAccountDto {
@@ -9,5 +23,12 @@ export interface OutputGetAccountDto {
   name: string;
   balance: number;
   user_id: string;
-  transactions: Transaction[];
+  _links: {
+    self: string;
+    transactions: string;
+    next?: string;
+    prev?: string;
+  };
+  // Só quando o includeTransactions é true
+  transactions?: PaginatedResponse<Transaction>;
 }

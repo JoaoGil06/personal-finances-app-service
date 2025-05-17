@@ -1,5 +1,5 @@
-import Account from "../../../domain/entity/account/account";
 import AccountRepositoryInterface from "../../../domain/repository/account-repository.interface";
+import { buildPaginatedResponse } from "../../shared/pagination";
 import { InputListAccountDto, OutputListAccountDto } from "./list.account.dto";
 
 export default class ListAccountsUseCase {
@@ -10,21 +10,30 @@ export default class ListAccountsUseCase {
   }
 
   async execute(input: InputListAccountDto): Promise<OutputListAccountDto> {
-    const accounts = await this.accountRepository.findAll();
-    return OutputMapper.toOutput(accounts);
-  }
-}
+    const accounts = await this.accountRepository.findAll({
+      limit: input.limit,
+      offset: input.offset,
+    });
 
-export class OutputMapper {
-  static toOutput(accounts: Account[]): OutputListAccountDto {
-    return {
-      accounts: accounts.map((account) => ({
-        id: account.id,
-        name: account.name,
-        balance: account.balance,
-        user_id: account.user_id,
-        transactions: account.transactions,
-      })),
-    };
+    const baseUrl = `/account`;
+
+    const dtoItems = accounts.map((account) => ({
+      id: account.id,
+      name: account.name,
+      balance: account.balance,
+      user_id: account.user_id,
+    }));
+
+    return buildPaginatedResponse({
+      items: dtoItems,
+      total: accounts.length,
+      limit: input.limit,
+      offset: input.offset,
+      baseUrl,
+      itemLink: (account) => ({
+        self: `${baseUrl}/${account.id}`,
+        transactions: `${baseUrl}/${account.id}?limit=20&offset=0`, // TO-DO: Cuidar deste Link
+      }),
+    });
   }
 }

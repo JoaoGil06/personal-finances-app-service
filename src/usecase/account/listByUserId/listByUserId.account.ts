@@ -1,5 +1,6 @@
-import Account from "../../../domain/entity/account/account";
 import AccountRepositoryInterface from "../../../domain/repository/account-repository.interface";
+import UserRepositoryInterface from "../../../domain/repository/user-repository.interface";
+import { buildPaginatedResponse } from "../../shared/pagination";
 import {
   InputListAccountByUserIdDto,
   OutputListAccountByUserIdDto,
@@ -7,35 +8,52 @@ import {
 
 export default class ListAccountsByUserIdUseCase {
   private accountRepository: AccountRepositoryInterface;
+  private userRepository: UserRepositoryInterface;
 
-  constructor(accountRepository: AccountRepositoryInterface) {
+  constructor(
+    accountRepository: AccountRepositoryInterface,
+    userRepository: UserRepositoryInterface
+  ) {
     this.accountRepository = accountRepository;
+    this.userRepository = userRepository;
   }
 
   async execute(
     input: InputListAccountByUserIdDto
   ): Promise<OutputListAccountByUserIdDto> {
-    const account = await this.accountRepository.find(input.id);
+    const userId = await this.userRepository.find(input.user_id);
 
-    if (!account) {
-      throw new Error("This account doesnt exist.");
+    if (!userId) {
+      throw new Error("This user doesnt exist.");
     }
 
-    const accounts = await this.accountRepository.findAllByUserId(input.id);
-    return OutputMapper.toOutput(accounts);
-  }
-}
+    const accounts = await this.accountRepository.findAllByUserId(
+      input.user_id,
+      {
+        limit: input.limit,
+        offset: input.offset,
+      }
+    );
 
-export class OutputMapper {
-  static toOutput(accounts: Account[]): OutputListAccountByUserIdDto {
-    return {
-      accounts: accounts.map((account) => ({
-        id: account.id,
-        name: account.name,
-        balance: account.balance,
-        user_id: account.user_id,
-        transactions: account.transactions,
-      })),
-    };
+    const baseUrl = `/account/list-by-user/${input.user_id}`;
+
+    const dtoItems = accounts.map((account) => ({
+      id: account.id,
+      name: account.name,
+      balance: account.balance,
+      user_id: account.user_id,
+    }));
+
+    return buildPaginatedResponse({
+      items: dtoItems,
+      total: accounts.length,
+      limit: input.limit,
+      offset: input.offset,
+      baseUrl,
+      itemLink: (account) => ({
+        self: `/account/${account.id}`,
+        transactions: `/account/${account.id}?limit=20&offset=0`, // TO-DO cuidar deste link
+      }),
+    });
   }
 }

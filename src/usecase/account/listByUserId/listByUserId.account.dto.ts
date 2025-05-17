@@ -1,17 +1,21 @@
-import Transaction from "../../../domain/entity/transaction/transaction";
+import { Link, PaginatedResponse } from "../../interfaces/pagination.interface";
 
 export interface InputListAccountByUserIdDto {
-  id: string;
+  user_id: string;
+  limit?: number;
+  offset?: number;
 }
+
+export type AccountLinks = {
+  transactions: string;
+};
 
 type Account = {
   id: string;
   name: string;
   balance: number;
   user_id: string;
-  transactions: Transaction[];
+  _links: Link & AccountLinks;
 };
 
-export interface OutputListAccountByUserIdDto {
-  accounts: Account[];
-}
+export type OutputListAccountByUserIdDto = PaginatedResponse<Account>;

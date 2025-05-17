@@ -4,8 +4,10 @@ import {
   PrimaryKey,
   Table,
   ForeignKey,
+  HasMany,
 } from "sequelize-typescript";
 import UserModel from "./user.model";
+import TransactionModel from "./transaction.model";
 
 @Table({
   tableName: "accounts",
@@ -24,4 +26,7 @@ export default class AccountModel extends Model {
 
   @Column({ allowNull: false })
   declare balance: number;
+
+  @HasMany(() => TransactionModel)
+  declare transactions: TransactionModel[];
 }
