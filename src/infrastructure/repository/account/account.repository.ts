@@ -1,4 +1,5 @@
 import Account from "../../../domain/entity/account/account";
+import AccountFactory from "../../../domain/entity/account/factory/account.factory";
 import TransactionFactory from "../../../domain/entity/transaction/factory/transaction.factory";
 import AccountRepositoryInterface, {
   FindAccountOptions,
@@ -50,7 +51,13 @@ export default class AccountRepository implements AccountRepositoryInterface {
 
     const { id: account_id, name, balance, user_id } = accountModel;
 
-    const account = new Account(account_id, name, balance, user_id);
+    const account = AccountFactory.create(
+      name,
+      balance,
+      user_id,
+      [],
+      account_id
+    );
 
     // Se não quisermos transactions, nem as devolve
     if (!options.includeTransactions) return account;
@@ -92,11 +99,12 @@ export default class AccountRepository implements AccountRepositoryInterface {
     });
 
     const accounts = accountModel.map((accountModel) => {
-      const account = new Account(
-        accountModel.id,
+      const account = AccountFactory.create(
         accountModel.name,
         accountModel.balance,
-        accountModel.user_id
+        accountModel.user_id,
+        [],
+        accountModel.id
       );
 
       return account;
@@ -117,11 +125,12 @@ export default class AccountRepository implements AccountRepositoryInterface {
     });
 
     const accounts = accountModel.map((accountModel) => {
-      const account = new Account(
-        accountModel.id,
+      const account = AccountFactory.create(
         accountModel.name,
         accountModel.balance,
-        accountModel.user_id
+        accountModel.user_id,
+        [],
+        accountModel.id
       );
 
       return account;

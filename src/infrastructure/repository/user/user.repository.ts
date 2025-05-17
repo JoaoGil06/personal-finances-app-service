@@ -1,3 +1,4 @@
+import UserFactory from "../../../domain/entity/user/factory/user.factory";
 import User from "../../../domain/entity/user/user";
 import { PaginationOptions } from "../../../domain/repository/repository-interface";
 import UserRepositoryInterface from "../../../domain/repository/user-repository.interface";
@@ -56,10 +57,10 @@ export default class UserRepository implements UserRepositoryInterface {
       accounts,
     } = userModel;
 
-    const user = new User(user_id, name, userEmail, password);
+    const user = UserFactory.create(name, userEmail, password, user_id);
 
     if (accounts && Array.isArray(accounts)) {
-      accounts.forEach((account: AccountModel, index) => {
+      accounts.forEach((account: AccountModel) => {
         user.addAccount(account.id);
       });
     }
@@ -74,11 +75,11 @@ export default class UserRepository implements UserRepositoryInterface {
     });
 
     const users = userModel.map((userModel) => {
-      const user = new User(
-        userModel.id,
+      const user = UserFactory.create(
         userModel.name,
         userModel.email,
-        userModel.password
+        userModel.password,
+        userModel.id
       );
 
       if (userModel.accounts && Array.isArray(userModel.accounts)) {
@@ -107,7 +108,7 @@ export default class UserRepository implements UserRepositoryInterface {
 
     const { id, name, email: userEmail, password } = userModel;
 
-    const user = new User(id, name, userEmail, password);
+    const user = UserFactory.create(name, userEmail, password, id);
 
     return user;
   }
