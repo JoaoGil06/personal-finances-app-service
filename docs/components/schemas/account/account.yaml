@@ -22,13 +22,5 @@ properties:
         type: string
         format: uri
         readOnly: true # Só irá aparecer nas respostas
-      prev:
-        type: string
-        format: uri
-        readOnly: true # Só irá aparecer nas respostas
-      next:
-        type: string
-        format: uri
-        readOnly: true # Só irá aparecer nas respostas
   transactions:
     $ref: "../transaction/paginated-transactions.yaml"

@@ -13,7 +13,14 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../../components/schemas/user/paginated-users.yaml"
+            type: object
+            properties:
+              items:
+                $ref: "../../components/schemas/user/paginated-users.yaml"
+              _links:
+                $ref: "../../components/schemas/pagination/pagination-links.yaml"
+              page:
+                $ref: "../../components/schemas/pagination/pagination-page.yaml"
 post:
   summary: Criação de utilizador
   description: Esta rota é responsável por registar um novo utilizador

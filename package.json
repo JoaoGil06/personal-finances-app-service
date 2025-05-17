@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/main.ts",
+    "build": "tsc",
+    "start": "npm run build && node dist/main.js",
+    "start:dev": "nodemon src/main.ts",
     "start:debug": "nodemon --exec \"node --inspect --require ts-node/register src/main.ts\"",
     "compile-api-docs": "swagger-cli bundle docs/swagger.yaml -o src/infrastructure/api/docs/swagger.json --dereference",
     "test-api-docs": "swagger-cli validate docs/swagger.yaml",
-    "test": "npm run tsc -- --noEmit && jest",
-    "tsc": "tsc"
+    "test": "npm run tsc -- --noEmit && jest"
   },
   "keywords": [],
   "author": "",

@@ -10,3 +10,14 @@ properties:
     writeOnly: true # Só irá aparacer nos requests body
   email:
     type: string
+  accounts:
+    type: array
+    items:
+      type: string
+  _links:
+    type: object
+    properties:
+      self:
+        type: string
+        format: uri
+        readOnly: true # Só irá aparecer nas respostas

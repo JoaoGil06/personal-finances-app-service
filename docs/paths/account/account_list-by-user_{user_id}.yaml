@@ -20,5 +20,9 @@ get:
           schema:
             type: object
             properties:
-              accounts:
+              items:
                 $ref: "../../components/schemas/account/paginated-account.yaml"
+              _links:
+                $ref: "../../components/schemas/pagination/pagination-links.yaml"
+              page:
+                $ref: "../../components/schemas/pagination/pagination-page.yaml"

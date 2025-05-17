@@ -102,23 +102,72 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "readOnly": true
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "password": {
-                        "type": "string",
-                        "writeOnly": true
-                      },
-                      "email": {
-                        "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "readOnly": true
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "password": {
+                            "type": "string",
+                            "writeOnly": true
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "accounts": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "_links": {
+                            "type": "object",
+                            "properties": {
+                              "self": {
+                                "type": "string",
+                                "format": "uri",
+                                "readOnly": true
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "prev": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "next": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
+                    },
+                    "page": {
+                      "type": "object",
+                      "properties": {
+                        "total": "number",
+                        "limit": "number",
+                        "offset": "number"
                       }
                     }
                   }
@@ -159,6 +208,22 @@
                   },
                   "email": {
                     "type": "string"
+                  },
+                  "accounts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "_links": {
+                    "type": "object",
+                    "properties": {
+                      "self": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                      }
+                    }
                   }
                 }
               },
@@ -195,6 +260,22 @@
                     },
                     "email": {
                       "type": "string"
+                    },
+                    "accounts": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
                     }
                   }
                 }
@@ -250,6 +331,22 @@
                     },
                     "email": {
                       "type": "string"
+                    },
+                    "accounts": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
                     }
                   }
                 }
@@ -307,6 +404,22 @@
                   },
                   "email": {
                     "type": "string"
+                  },
+                  "accounts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "_links": {
+                    "type": "object",
+                    "properties": {
+                      "self": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                      }
+                    }
                   }
                 }
               },
@@ -343,6 +456,22 @@
                     },
                     "email": {
                       "type": "string"
+                    },
+                    "accounts": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
                     }
                   }
                 }
@@ -396,6 +525,22 @@
                     },
                     "email": {
                       "type": "string"
+                    },
+                    "accounts": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
                     }
                   }
                 }
@@ -427,7 +572,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "accounts": {
+                    "items": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -456,16 +601,6 @@
                                 "readOnly": true
                               },
                               "transactions": {
-                                "type": "string",
-                                "format": "uri",
-                                "readOnly": true
-                              },
-                              "prev": {
-                                "type": "string",
-                                "format": "uri",
-                                "readOnly": true
-                              },
-                              "next": {
                                 "type": "string",
                                 "format": "uri",
                                 "readOnly": true
@@ -525,6 +660,34 @@
                             }
                           }
                         }
+                      }
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "prev": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "next": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
+                    },
+                    "page": {
+                      "type": "object",
+                      "properties": {
+                        "total": "number",
+                        "limit": "number",
+                        "offset": "number"
                       }
                     }
                   }
@@ -617,16 +780,6 @@
                           "readOnly": true
                         },
                         "transactions": {
-                          "type": "string",
-                          "format": "uri",
-                          "readOnly": true
-                        },
-                        "prev": {
-                          "type": "string",
-                          "format": "uri",
-                          "readOnly": true
-                        },
-                        "next": {
                           "type": "string",
                           "format": "uri",
                           "readOnly": true
@@ -749,16 +902,6 @@
                         "type": "string",
                         "format": "uri",
                         "readOnly": true
-                      },
-                      "prev": {
-                        "type": "string",
-                        "format": "uri",
-                        "readOnly": true
-                      },
-                      "next": {
-                        "type": "string",
-                        "format": "uri",
-                        "readOnly": true
                       }
                     }
                   },
@@ -858,16 +1001,6 @@
                           "readOnly": true
                         },
                         "transactions": {
-                          "type": "string",
-                          "format": "uri",
-                          "readOnly": true
-                        },
-                        "prev": {
-                          "type": "string",
-                          "format": "uri",
-                          "readOnly": true
-                        },
-                        "next": {
                           "type": "string",
                           "format": "uri",
                           "readOnly": true
@@ -992,16 +1125,6 @@
                           "type": "string",
                           "format": "uri",
                           "readOnly": true
-                        },
-                        "prev": {
-                          "type": "string",
-                          "format": "uri",
-                          "readOnly": true
-                        },
-                        "next": {
-                          "type": "string",
-                          "format": "uri",
-                          "readOnly": true
                         }
                       }
                     },
@@ -1123,16 +1246,6 @@
                         "type": "string",
                         "format": "uri",
                         "readOnly": true
-                      },
-                      "prev": {
-                        "type": "string",
-                        "format": "uri",
-                        "readOnly": true
-                      },
-                      "next": {
-                        "type": "string",
-                        "format": "uri",
-                        "readOnly": true
                       }
                     }
                   },
@@ -1235,16 +1348,6 @@
                           "type": "string",
                           "format": "uri",
                           "readOnly": true
-                        },
-                        "prev": {
-                          "type": "string",
-                          "format": "uri",
-                          "readOnly": true
-                        },
-                        "next": {
-                          "type": "string",
-                          "format": "uri",
-                          "readOnly": true
                         }
                       }
                     },
@@ -1341,7 +1444,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "accounts": {
+                    "items": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -1370,16 +1473,6 @@
                                 "readOnly": true
                               },
                               "transactions": {
-                                "type": "string",
-                                "format": "uri",
-                                "readOnly": true
-                              },
-                              "prev": {
-                                "type": "string",
-                                "format": "uri",
-                                "readOnly": true
-                              },
-                              "next": {
                                 "type": "string",
                                 "format": "uri",
                                 "readOnly": true
@@ -1439,6 +1532,34 @@
                             }
                           }
                         }
+                      }
+                    },
+                    "_links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "prev": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        },
+                        "next": {
+                          "type": "string",
+                          "format": "uri",
+                          "readOnly": true
+                        }
+                      }
+                    },
+                    "page": {
+                      "type": "object",
+                      "properties": {
+                        "total": "number",
+                        "limit": "number",
+                        "offset": "number"
                       }
                     }
                   }

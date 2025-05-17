@@ -1,0 +1,15 @@
+type: object
+properties:
+  self:
+    type: string
+    format: uri
+    readOnly: true # Só irá aparecer nas respostas
+  prev:
+    type: string
+    format: uri
+    readOnly: true # Só irá aparecer nas respostas
+  next:
+    type: string
+    format: uri
+    readOnly: true # Só irá aparecer nas respostas
+

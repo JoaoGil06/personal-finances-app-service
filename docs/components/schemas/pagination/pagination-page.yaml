@@ -1,0 +1,5 @@
+type: object
+properties:
+  total: number
+  limit: number
+  offset: number
