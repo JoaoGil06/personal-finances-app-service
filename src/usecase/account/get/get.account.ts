@@ -42,6 +42,7 @@ export default class GetAccountUseCase {
           amount: transaction.amount,
           date: transaction.date,
           type: transaction.type,
+          transaction_persona_id: transaction.transaction_persona_id,
         })),
         page: {
           total: account.total_transaction,

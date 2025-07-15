@@ -28,6 +28,7 @@ export default class GetTransactionUseCase {
       date: transaction.date,
       type: transaction.type,
       amount: transaction.amount,
+      transaction_persona_id: transaction.transaction_persona_id,
     };
   }
 }

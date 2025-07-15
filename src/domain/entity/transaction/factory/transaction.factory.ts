@@ -10,6 +10,7 @@ export default class TransactionFactory {
     user_id: string,
     date: Date,
     type: TransactionType,
+    transaction_persona_id: string,
     id = uuid()
   ) {
     return new Transaction(
@@ -19,7 +20,8 @@ export default class TransactionFactory {
       user_id,
       amount,
       date,
-      type
+      type,
+      transaction_persona_id
     );
   }
 }

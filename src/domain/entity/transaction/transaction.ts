@@ -9,6 +9,7 @@ export default class Transaction extends Entity {
   private _user_id: string;
   private _date: Date;
   private _type: TransactionType;
+  private _transaction_persona_id: string;
 
   constructor(
     id: string,
@@ -17,7 +18,8 @@ export default class Transaction extends Entity {
     user_id: string,
     amount: number,
     date: Date,
-    type: TransactionType
+    type: TransactionType,
+    transaction_persona_id: string
   ) {
     super();
 
@@ -28,6 +30,7 @@ export default class Transaction extends Entity {
     this._amount = amount;
     this._date = date;
     this._type = type;
+    this._transaction_persona_id = transaction_persona_id;
 
     this.validate();
   }
@@ -60,6 +63,14 @@ export default class Transaction extends Entity {
     return this._budget_id;
   }
 
+  get transaction_persona_id(): string {
+    return this._transaction_persona_id;
+  }
+
+  setTransactionPersona(transaction_persona_id: string) {
+    this._transaction_persona_id = transaction_persona_id;
+  }
+
   validate() {
     const dataValidator = new DataValidator();
 
@@ -81,6 +92,10 @@ export default class Transaction extends Entity {
 
     if (this._budget_id.length === 0) {
       throw new Error("Transaction Budget ID is required");
+    }
+
+    if (this._transaction_persona_id.length === 0) {
+      throw new Error("Account User_ID is required");
     }
   }
 }

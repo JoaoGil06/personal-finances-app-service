@@ -12,4 +12,5 @@ export interface OutputGetTransactionDto {
   date: Date;
   type: TransactionType;
   amount: number;
+  transaction_persona_id: string;
 }

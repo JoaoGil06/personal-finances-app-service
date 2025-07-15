@@ -4,6 +4,7 @@ import { Sequelize } from "sequelize-typescript";
 import UserModel from "../../db/sequelize/model/user.model";
 import AccountModel from "../../db/sequelize/model/account.model";
 import TransactionModel from "../../db/sequelize/model/transaction.model";
+import TransactionPersonaModel from "../../db/sequelize/model/transactionPersona.model";
 
 export let sequelize: Sequelize;
 
@@ -14,7 +15,12 @@ async function setupDb() {
     logging: false,
   });
 
-  await sequelize.addModels([UserModel, AccountModel, TransactionModel]);
+  await sequelize.addModels([
+    UserModel,
+    AccountModel,
+    TransactionModel,
+    TransactionPersonaModel,
+  ]);
   await sequelize.sync();
 }
 

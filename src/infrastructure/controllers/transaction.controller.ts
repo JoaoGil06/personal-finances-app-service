@@ -6,6 +6,7 @@ import TransactionRepository from "../repository/transaction/transaction.reposit
 import ListTransactionsByAccountIdUseCase from "../../usecase/transaction/list/list.transaction";
 import GetTransactionUseCase from "../../usecase/transaction/get/get.transaction";
 import DeleteTransactionUseCase from "../../usecase/transaction/delete/delete.transaction";
+import TransactionPersonaRepository from "../repository/transactionPersona/transactionPersona.repository";
 
 // Get All Transactions By Account Id
 export async function listTransactionsByAccountIdController(
@@ -33,7 +34,6 @@ export async function listTransactionsByAccountIdController(
 
 // Get Transaction
 export async function getTransactionController(req: Request, res: Response) {
-  console.log("Entra aqui");
   const usecase = new GetTransactionUseCase(new TransactionRepository());
 
   try {
@@ -49,12 +49,13 @@ export async function getTransactionController(req: Request, res: Response) {
   }
 }
 
-// Create Account
+// Create Transaction
 export async function createTransactionController(req: Request, res: Response) {
   const usecase = new CreateTransactionUseCase(
     new TransactionRepository(),
     new AccountRepository(),
-    new UserRepository()
+    new UserRepository(),
+    new TransactionPersonaRepository()
   );
 
   try {
@@ -65,6 +66,7 @@ export async function createTransactionController(req: Request, res: Response) {
       date: req.body.date,
       type: req.body.type,
       amount: req.body.amount,
+      transaction_persona_id: req.body.transaction_persona_id,
     };
 
     const output = await usecase.execute(transactionDto);

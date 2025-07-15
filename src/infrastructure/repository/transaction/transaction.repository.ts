@@ -16,6 +16,7 @@ export default class TransactionRepository
       date: entity.date,
       type: entity.type,
       amount: entity.amount,
+      transaction_persona_id: entity.transaction_persona_id,
     });
   }
 
@@ -50,6 +51,7 @@ export default class TransactionRepository
       date,
       type,
       amount,
+      transaction_persona_id,
     } = transactionModel;
 
     const transaction = TransactionFactory.create(
@@ -59,6 +61,7 @@ export default class TransactionRepository
       user_id,
       date,
       type,
+      transaction_persona_id,
       transaction_id
     );
 
@@ -88,6 +91,7 @@ export default class TransactionRepository
         transactionModel.user_id,
         transactionModel.date,
         transactionModel.type,
+        transactionModel.transaction_persona_id,
         transactionModel.id
       );
 

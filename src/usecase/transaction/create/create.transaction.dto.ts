@@ -7,6 +7,7 @@ export interface InputCreateTransactionDto {
   user_id: string;
   date: Date;
   type: TransactionType;
+  transaction_persona_id: string;
 }
 
 export interface OutputCreateTransactionDto {
@@ -17,4 +18,5 @@ export interface OutputCreateTransactionDto {
   date: Date;
   type: TransactionType;
   amount: number;
+  transaction_persona_id: string;
 }
