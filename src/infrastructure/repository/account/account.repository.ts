@@ -1,11 +1,13 @@
 import Account from "../../../domain/entity/account/account";
 import AccountFactory from "../../../domain/entity/account/factory/account.factory";
+import BudgetFactory from "../../../domain/entity/budget/factory/budget.factory";
 import TransactionFactory from "../../../domain/entity/transaction/factory/transaction.factory";
 import AccountRepositoryInterface, {
   FindAccountOptions,
 } from "../../../domain/repository/account-repository.interface";
 import { PaginationOptions } from "../../../domain/repository/repository-interface";
 import AccountModel from "../../db/sequelize/model/account.model";
+import BudgetModel from "../../db/sequelize/model/budget.model";
 import TransactionModel from "../../db/sequelize/model/transaction.model";
 
 export default class AccountRepository implements AccountRepositoryInterface {
@@ -40,6 +42,9 @@ export default class AccountRepository implements AccountRepositoryInterface {
     let accountModel;
     try {
       accountModel = await AccountModel.findOne({
+        /* Include -> Aliado ao @hasMany (no model)
+                    - Vai fazer um JOIN e procurar na tabela Budgets onde existe o account_id com o ID */
+        include: [{ model: BudgetModel }],
         where: {
           id,
         },
@@ -49,13 +54,31 @@ export default class AccountRepository implements AccountRepositoryInterface {
       return null;
     }
 
-    const { id: account_id, name, balance, user_id } = accountModel;
+    const {
+      id: account_id,
+      name,
+      balance,
+      user_id,
+      budgets: budgetsModel,
+    } = accountModel;
+
+    const budgets = budgetsModel.map((budgetModel) => {
+      const budget = BudgetFactory.create(
+        budgetModel.name,
+        budgetModel.account_id,
+        budgetModel.maximum_amount,
+        budgetModel.id
+      );
+
+      return budget;
+    });
 
     const account = AccountFactory.create(
       name,
       balance,
       user_id,
       [],
+      budgets,
       account_id
     );
 
@@ -74,36 +97,49 @@ export default class AccountRepository implements AccountRepositoryInterface {
       });
 
     transactionItems.forEach((transaction: TransactionModel) => {
-      // TO-DO: Replace this budget_id by a real one
       const transactionEntity = TransactionFactory.create(
         transaction.amount,
         transaction.account_id,
-        "transaction.budget_id",
+        transaction.budget_id,
         transaction.user_id,
         transaction.date,
         transaction.type,
+        transaction.transaction_persona_id,
         transaction.id
       );
 
       account.addTransaction(transactionEntity);
     });
 
-    account.setTotalTransactions(count);
-
     return account;
   }
   async findAll(paginationOptions: PaginationOptions = {}): Promise<Account[]> {
     const accountModel = await AccountModel.findAll({
+      /* Include -> Aliado ao @hasMany (no model)
+                    - Vai fazer um JOIN e procurar na tabela Budgets onde existe o account_id com o ID */
+      include: [{ model: BudgetModel }],
       limit: paginationOptions.limit,
       offset: paginationOptions.offset,
     });
 
     const accounts = accountModel.map((accountModel) => {
+      const budgets = accountModel.budgets.map((budgetModel) => {
+        const budget = BudgetFactory.create(
+          budgetModel.name,
+          budgetModel.account_id,
+          budgetModel.maximum_amount,
+          budgetModel.id
+        );
+
+        return budget;
+      });
+
       const account = AccountFactory.create(
         accountModel.name,
         accountModel.balance,
         accountModel.user_id,
         [],
+        budgets,
         accountModel.id
       );
 
@@ -117,6 +153,9 @@ export default class AccountRepository implements AccountRepositoryInterface {
     paginationOptions: PaginationOptions
   ): Promise<Account[]> {
     const accountModel = await AccountModel.findAll({
+      /* Include -> Aliado ao @hasMany (no model)
+                    - Vai fazer um JOIN e procurar na tabela Budgets onde existe o account_id com o ID */
+      include: [{ model: BudgetModel }],
       where: {
         user_id,
       },
@@ -125,11 +164,23 @@ export default class AccountRepository implements AccountRepositoryInterface {
     });
 
     const accounts = accountModel.map((accountModel) => {
+      const budgets = accountModel.budgets.map((budgetModel) => {
+        const budget = BudgetFactory.create(
+          budgetModel.name,
+          budgetModel.account_id,
+          budgetModel.maximum_amount,
+          budgetModel.id
+        );
+
+        return budget;
+      });
+
       const account = AccountFactory.create(
         accountModel.name,
         accountModel.balance,
         accountModel.user_id,
         [],
+        budgets,
         accountModel.id
       );
 

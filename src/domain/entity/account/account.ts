@@ -1,5 +1,6 @@
 import { DataValidator } from "../../../infrastructure/adapters/data-validator.adapter";
 import Entity from "../../@shared/entity/entity.abstract";
+import Budget from "../budget/budget";
 import Transaction from "../transaction/transaction";
 import { TransactionType } from "../transaction/transaction.types";
 
@@ -8,14 +9,15 @@ export default class Account extends Entity {
   private _balance: number;
   private _user_id: string;
   private _transactions: Transaction[];
-  private _total_transactions: number;
+  private _budgets: Budget[];
 
   constructor(
     id: string,
     name: string = "Conta Principal",
     balance: number = 0,
     user_id: string,
-    transactions: Transaction[] = []
+    transactions: Transaction[] = [],
+    budgets: Budget[] = []
   ) {
     super();
 
@@ -24,6 +26,7 @@ export default class Account extends Entity {
     this._balance = balance;
     this._user_id = user_id;
     this._transactions = transactions;
+    this._budgets = budgets;
 
     this.validate();
   }
@@ -48,8 +51,8 @@ export default class Account extends Entity {
     return this._user_id;
   }
 
-  get total_transaction(): number {
-    return this._total_transactions;
+  get budgets(): Budget[] {
+    return this._budgets;
   }
 
   validate() {
@@ -98,7 +101,29 @@ export default class Account extends Entity {
     this._transactions.push(transaction);
   }
 
-  setTotalTransactions(total_transactions: number) {
-    this._total_transactions = total_transactions;
+  getTotalTransactions(): number {
+    if (this._transactions.length > 0) {
+      return this._transactions.length;
+    }
+
+    return 0;
+  }
+
+  addBudget(budget: Budget) {
+    this._budgets.push(budget);
+  }
+
+  decreaseBalance(amount: number) {
+    this._balance -= amount;
+  }
+
+  increaseBalance(amount: number) {
+    this._balance += amount;
+  }
+
+  removeTransaction(transactionId: string): void {
+    this._transactions = this._transactions.filter(
+      (t) => t.id !== transactionId
+    );
   }
 }

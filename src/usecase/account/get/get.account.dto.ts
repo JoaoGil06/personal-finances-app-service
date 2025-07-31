@@ -11,6 +11,12 @@ type Transaction = {
   type: TransactionType;
 };
 
+type Budget = {
+  id: string;
+  name: string;
+  maximum_amount: number;
+};
+
 export interface InputGetAccountDto {
   id: string;
   includeTransactions?: boolean;
@@ -23,9 +29,11 @@ export interface OutputGetAccountDto {
   name: string;
   balance: number;
   user_id: string;
+  budgets: PaginatedResponse<Budget>;
   _links: {
     self: string;
     transactions: string;
+    budgets: string;
     next?: string;
     prev?: string;
   };

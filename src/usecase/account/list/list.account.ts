@@ -32,7 +32,8 @@ export default class ListAccountsUseCase {
       baseUrl,
       itemLink: (account) => ({
         self: `${baseUrl}/${account.id}`,
-        transactions: `${baseUrl}/${account.id}?limit=20&offset=0`, // TO-DO: Cuidar deste Link
+        transactions: `/transaction/list-by-account/${account.id}?limit=20&offset=0`,
+        budgets: `/budget/list-by-account/${account.id}?limit=20&offset=0`,
       }),
     });
   }

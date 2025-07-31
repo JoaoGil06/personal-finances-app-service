@@ -52,7 +52,8 @@ export default class ListAccountsByUserIdUseCase {
       baseUrl,
       itemLink: (account) => ({
         self: `/account/${account.id}`,
-        transactions: `/account/${account.id}?limit=20&offset=0`, // TO-DO cuidar deste link
+        transactions: `/transaction/list-by-account/${account.id}?limit=20&offset=0`,
+        budgets: `/budget/list-by-account/${account.id}?limit=20&offset=0`,
       }),
     });
   }

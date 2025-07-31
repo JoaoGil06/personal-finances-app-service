@@ -6,6 +6,7 @@ import TransactionPersonaRepository from "../repository/transactionPersona/trans
 import ListTransactionsPersonaUseCase from "../../usecase/transactionPersona/list/list.transactionPersona";
 import DeleteTransactionPersonaUseCase from "../../usecase/transactionPersona/delete/delete.transactionPersona";
 import UpdateTransactionPersonaUseCase from "../../usecase/transactionPersona/update/update.transactionPersona";
+import TransactionRepository from "../repository/transaction/transaction.repository";
 
 // Get All Transactions By Account Id
 export async function listTransactionsPersonaController(
@@ -112,7 +113,8 @@ export async function deleteTransactionPersonaController(
   res: Response
 ) {
   const usecase = new DeleteTransactionPersonaUseCase(
-    new TransactionPersonaRepository()
+    new TransactionPersonaRepository(),
+    new TransactionRepository()
   );
 
   try {

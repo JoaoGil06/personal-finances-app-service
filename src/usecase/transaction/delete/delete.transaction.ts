@@ -1,4 +1,7 @@
 import TransactionRepositoryInterface from "../../../domain/repository/transaction-repository.interface";
+import AccountRepository from "../../../infrastructure/repository/account/account.repository";
+import BudgetRepository from "../../../infrastructure/repository/budget/budget.repository";
+import TransactionReversalService from "../../../service/transaction/transactionReversal.service";
 import {
   InputDeleteTransactionDto,
   OutputDeleteTransactionDto,
@@ -6,9 +9,17 @@ import {
 
 export default class DeleteTransactionUseCase {
   private transactionRepository: TransactionRepositoryInterface;
+  private accountRepository: AccountRepository;
+  private budgetRepository: BudgetRepository;
 
-  constructor(transactionRepository: TransactionRepositoryInterface) {
+  constructor(
+    transactionRepository: TransactionRepositoryInterface,
+    accountRepository: AccountRepository,
+    budgetRepository: BudgetRepository
+  ) {
     this.transactionRepository = transactionRepository;
+    this.accountRepository = accountRepository;
+    this.budgetRepository = budgetRepository;
   }
 
   async execute(
@@ -18,6 +29,28 @@ export default class DeleteTransactionUseCase {
 
     if (!transaction) {
       throw new Error("This transaction id doesnt match any transaction.");
+    }
+
+    const account = await this.accountRepository.find(transaction.account_id);
+    if (!account) throw new Error("Associated account not found.");
+
+    // Reverter transação da conta
+    TransactionReversalService.revertTransactionFromAccount(
+      account,
+      transaction
+    );
+    await this.accountRepository.update(account);
+
+    // Se tiver budget, reverter também
+    if (transaction.budget_id) {
+      const budget = await this.budgetRepository.find(transaction.budget_id);
+      if (budget) {
+        TransactionReversalService.revertTransactionFromBudget(
+          budget,
+          transaction
+        );
+        await this.budgetRepository.update(budget);
+      }
     }
 
     await this.transactionRepository.delete(transaction.id);

@@ -7,6 +7,8 @@ import ListTransactionsByAccountIdUseCase from "../../usecase/transaction/list/l
 import GetTransactionUseCase from "../../usecase/transaction/get/get.transaction";
 import DeleteTransactionUseCase from "../../usecase/transaction/delete/delete.transaction";
 import TransactionPersonaRepository from "../repository/transactionPersona/transactionPersona.repository";
+import TransactionProcessorService from "../../service/transaction/transactionProcessor.service";
+import BudgetRepository from "../repository/budget/budget.repository";
 
 // Get All Transactions By Account Id
 export async function listTransactionsByAccountIdController(
@@ -51,12 +53,15 @@ export async function getTransactionController(req: Request, res: Response) {
 
 // Create Transaction
 export async function createTransactionController(req: Request, res: Response) {
-  const usecase = new CreateTransactionUseCase(
-    new TransactionRepository(),
-    new AccountRepository(),
+  const transactionProcess = new TransactionProcessorService(
     new UserRepository(),
-    new TransactionPersonaRepository()
+    new AccountRepository(),
+    new TransactionRepository(),
+    new TransactionPersonaRepository(),
+    new BudgetRepository()
   );
+
+  const usecase = new CreateTransactionUseCase(transactionProcess);
 
   try {
     const transactionDto = {
@@ -78,7 +83,11 @@ export async function createTransactionController(req: Request, res: Response) {
 
 // Delete Transaction
 export async function deleteTransactionController(req: Request, res: Response) {
-  const usecase = new DeleteTransactionUseCase(new TransactionRepository());
+  const usecase = new DeleteTransactionUseCase(
+    new TransactionRepository(),
+    new AccountRepository(),
+    new BudgetRepository()
+  );
 
   try {
     const userDto = {

@@ -5,6 +5,7 @@ import UserModel from "../../db/sequelize/model/user.model";
 import AccountModel from "../../db/sequelize/model/account.model";
 import TransactionModel from "../../db/sequelize/model/transaction.model";
 import TransactionPersonaModel from "../../db/sequelize/model/transactionPersona.model";
+import BudgetModel from "../../db/sequelize/model/budget.model";
 
 export let sequelize: Sequelize;
 
@@ -20,6 +21,7 @@ async function setupDb() {
     AccountModel,
     TransactionModel,
     TransactionPersonaModel,
+    BudgetModel,
   ]);
   await sequelize.sync();
 }

@@ -1,8 +1,4 @@
-import {
-  PaginatedResponse,
-  Link,
-  NavLinks,
-} from "../interfaces/pagination.interface";
+import { PaginatedResponse, Link } from "../interfaces/pagination.interface";
 
 export interface BuildPageParams<T, L extends Link = Link> {
   items: T[]; // lista bruta (sem _links)

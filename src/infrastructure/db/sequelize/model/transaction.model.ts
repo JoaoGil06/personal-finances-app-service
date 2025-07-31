@@ -9,6 +9,7 @@ import UserModel from "./user.model";
 import AccountModel from "./account.model";
 import { TransactionType } from "../../../../domain/entity/transaction/transaction.types";
 import TransactionPersonaModel from "./transactionPersona.model";
+import BudgetModel from "./budget.model";
 
 @Table({
   tableName: "transactions",
@@ -17,8 +18,6 @@ export default class TransactionModel extends Model {
   @PrimaryKey
   @Column
   declare id: string;
-
-  // TO-DO: Mais tarde adicionar budget ID
 
   @ForeignKey(() => TransactionPersonaModel)
   @Column({ allowNull: true })
@@ -31,6 +30,10 @@ export default class TransactionModel extends Model {
   @ForeignKey(() => UserModel)
   @Column({ allowNull: false })
   declare user_id: string;
+
+  @ForeignKey(() => BudgetModel)
+  @Column({ allowNull: false })
+  declare budget_id: string;
 
   @Column({ allowNull: false })
   declare date: Date;

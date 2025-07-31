@@ -1,4 +1,5 @@
 import TransactionPersonaRepositoryInterface from "../../../domain/repository/transaction-persona-repository.interface";
+import TransactionRepositoryInterface from "../../../domain/repository/transaction-repository.interface";
 import {
   InputDeleteTransactionPersonaDto,
   OutputDeleteTransactionPersonaDto,
@@ -6,11 +7,14 @@ import {
 
 export default class DeleteTransactionPersonaUseCase {
   private transactionPersonaRepository: TransactionPersonaRepositoryInterface;
+  private transactionRepository: TransactionRepositoryInterface;
 
   constructor(
-    transactionPersonaRepository: TransactionPersonaRepositoryInterface
+    transactionPersonaRepository: TransactionPersonaRepositoryInterface,
+    transactionRepository: TransactionRepositoryInterface
   ) {
     this.transactionPersonaRepository = transactionPersonaRepository;
+    this.transactionRepository = transactionRepository;
   }
 
   async execute(
@@ -22,6 +26,14 @@ export default class DeleteTransactionPersonaUseCase {
 
     if (!transactionPersona) {
       throw new Error("This transaction persona id doesnt match any persona.");
+    }
+
+    // Verificar se a persona está a ser usada
+    const isUsed = await this.transactionRepository.existsWithPersona(input.id);
+    if (isUsed) {
+      throw new Error(
+        "Cannot delete this persona: it is associated with transactions."
+      );
     }
 
     await this.transactionPersonaRepository.delete(transactionPersona.id);

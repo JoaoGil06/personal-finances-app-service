@@ -112,11 +112,11 @@ export async function deleteAccountController(req: Request, res: Response) {
   const usecase = new DeleteAccountUseCase(new AccountRepository());
 
   try {
-    const userDto = {
+    const accountDto = {
       id: req.params.id,
     };
 
-    const output = await usecase.execute(userDto);
+    const output = await usecase.execute(accountDto);
     res.status(200).send(output);
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });

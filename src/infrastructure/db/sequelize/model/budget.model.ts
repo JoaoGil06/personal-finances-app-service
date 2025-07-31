@@ -1,36 +1,32 @@
 import {
-  Model,
   Column,
-  PrimaryKey,
-  Table,
   ForeignKey,
   HasMany,
+  Model,
+  PrimaryKey,
+  Table,
 } from "sequelize-typescript";
-import UserModel from "./user.model";
+import AccountModel from "./account.model";
 import TransactionModel from "./transaction.model";
-import BudgetModel from "./budget.model";
 
 @Table({
-  tableName: "accounts",
+  tableName: "budgets",
 })
-export default class AccountModel extends Model {
+export default class BudgetModel extends Model {
   @PrimaryKey
   @Column
   declare id: string;
 
-  @ForeignKey(() => UserModel)
+  @ForeignKey(() => AccountModel)
   @Column({ allowNull: false })
-  declare user_id: string;
+  declare account_id: string;
 
   @Column({ allowNull: false })
   declare name: string;
 
   @Column({ allowNull: false })
-  declare balance: number;
+  declare maximum_amount: number;
 
   @HasMany(() => TransactionModel)
   declare transactions: TransactionModel[];
-
-  @HasMany(() => BudgetModel)
-  declare budgets: BudgetModel[];
 }

@@ -7,6 +7,7 @@ import { accountRoutes } from "../../routes/account.route";
 import { transactionRoutes } from "../../routes/transaction.route";
 import { transactionPersonaRoutes } from "../../routes/transactionPersona.route";
 import { ASSETS_DIR } from "../../constants/path";
+import { budgetRoutes } from "../../routes/budget.route";
 
 export const app: Express = express();
 app.use(express.json());
@@ -24,3 +25,4 @@ authRoutes(app);
 accountRoutes(app);
 transactionRoutes(app);
 transactionPersonaRoutes(app);
+budgetRoutes(app);

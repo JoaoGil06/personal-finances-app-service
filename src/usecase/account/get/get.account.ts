@@ -26,9 +26,17 @@ export default class GetAccountUseCase {
       name: account.name,
       balance: account.balance,
       user_id: account.user_id,
+      budgets: {
+        items: account.budgets.map((budget) => ({
+          id: budget.id,
+          name: budget.name,
+          maximum_amount: budget.maximum_amount,
+        })),
+      },
       _links: {
         self: baseUrl,
-        transactions: `${baseUrl}/transactions/?limit=${input.limit}&offset=${input.offset}`,
+        transactions: `/transaction/list-by-account/${account.id}/?limit=${input.limit}&offset=${input.offset}`,
+        budgets: `/budget/list-by-account/${account.id}/?limit=${input.limit}&offset=${input.offset}`,
       },
     };
 
@@ -45,7 +53,7 @@ export default class GetAccountUseCase {
           transaction_persona_id: transaction.transaction_persona_id,
         })),
         page: {
-          total: account.total_transaction,
+          total: account.getTotalTransactions(),
           limit: input.limit,
           offset: input.offset,
         },
