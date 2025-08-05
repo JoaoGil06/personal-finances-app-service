@@ -5,7 +5,8 @@ import { TransactionType } from "./transaction.types";
 export default class Transaction extends Entity {
   private _amount: number;
   private _account_id: string;
-  private _budget_id: string;
+  private _budget_id?: string;
+  private _pot_id?: string;
   private _user_id: string;
   private _date: Date;
   private _type: TransactionType;
@@ -14,23 +15,31 @@ export default class Transaction extends Entity {
   constructor(
     id: string,
     account_id: string,
-    budget_id: string,
+    budget_id: string | undefined,
     user_id: string,
     amount: number,
     date: Date,
     type: TransactionType,
-    transaction_persona_id: string
+    transaction_persona_id: string,
+    pot_id: string | undefined
   ) {
     super();
 
+    if ((budget_id && pot_id) || (!budget_id && !pot_id)) {
+      throw new Error(
+        "A transaction must belong to either a Budget or a Pot, not both."
+      );
+    }
+
     this._id = id;
     this._account_id = account_id;
-    this._budget_id = budget_id;
     this._user_id = user_id;
     this._amount = amount;
     this._date = date;
     this._type = type;
     this._transaction_persona_id = transaction_persona_id;
+    this._budget_id = budget_id;
+    this._pot_id = pot_id;
 
     this.validate();
   }
@@ -63,6 +72,10 @@ export default class Transaction extends Entity {
     return this._budget_id;
   }
 
+  get pot_id(): string {
+    return this._pot_id;
+  }
+
   get transaction_persona_id(): string {
     return this._transaction_persona_id;
   }
@@ -88,10 +101,6 @@ export default class Transaction extends Entity {
 
     if (this._amount <= 0 || !dataValidator.validateNumber(this._amount)) {
       throw new Error("Transaction Amount must be positive");
-    }
-
-    if (this._budget_id.length === 0) {
-      throw new Error("Transaction Budget ID is required");
     }
 
     if (this._transaction_persona_id.length === 0) {

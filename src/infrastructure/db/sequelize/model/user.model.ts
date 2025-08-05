@@ -26,6 +26,4 @@ export default class UserModel extends Model {
 
   @HasMany(() => AccountModel)
   declare accounts: AccountModel[];
-
-  // TO-DO: Adicionar aqui o hasMany para Transactions caso queiramos ter Transactions também a ser retornadas por utilizador
 }

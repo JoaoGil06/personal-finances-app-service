@@ -30,6 +30,7 @@ export default class BudgetRepository implements BudgetRepositoryInterface {
         budgetModel.name,
         budgetModel.account_id,
         budgetModel.maximum_amount,
+        [],
         budgetModel.id
       );
 
@@ -112,6 +113,7 @@ export default class BudgetRepository implements BudgetRepositoryInterface {
       name,
       account_id,
       maximum_amount,
+      [],
       budgetId
     );
 

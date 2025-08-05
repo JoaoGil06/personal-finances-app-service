@@ -1,6 +1,7 @@
 import TransactionRepositoryInterface from "../../../domain/repository/transaction-repository.interface";
 import AccountRepository from "../../../infrastructure/repository/account/account.repository";
 import BudgetRepository from "../../../infrastructure/repository/budget/budget.repository";
+import PotRepository from "../../../infrastructure/repository/pot/pot.repository";
 import TransactionReversalService from "../../../service/transaction/transactionReversal.service";
 import {
   InputDeleteTransactionDto,
@@ -11,15 +12,18 @@ export default class DeleteTransactionUseCase {
   private transactionRepository: TransactionRepositoryInterface;
   private accountRepository: AccountRepository;
   private budgetRepository: BudgetRepository;
+  private potRepository: PotRepository;
 
   constructor(
     transactionRepository: TransactionRepositoryInterface,
     accountRepository: AccountRepository,
-    budgetRepository: BudgetRepository
+    budgetRepository: BudgetRepository,
+    potRepository: PotRepository
   ) {
     this.transactionRepository = transactionRepository;
     this.accountRepository = accountRepository;
     this.budgetRepository = budgetRepository;
+    this.potRepository = potRepository;
   }
 
   async execute(
@@ -53,12 +57,22 @@ export default class DeleteTransactionUseCase {
       }
     }
 
+    if (transaction.pot_id) {
+      const pot = await this.potRepository.find(transaction.pot_id);
+      if (pot) {
+        TransactionReversalService.revertTransactionFromPot(pot, transaction);
+      }
+
+      await this.potRepository.update(pot);
+    }
+
     await this.transactionRepository.delete(transaction.id);
 
     return {
       id: transaction.id,
       account_id: transaction.account_id,
       budget_id: transaction.budget_id,
+      pot_id: transaction.pot_id,
       user_id: transaction.user_id,
       date: transaction.date,
       type: transaction.type,

@@ -7,6 +7,9 @@ import UpdateAccountUseCase from "../../usecase/account/update/update.account";
 import ListAccountsUseCase from "../../usecase/account/list/list.account";
 import DeleteAccountUseCase from "../../usecase/account/delete/delete.account";
 import ListAccountsByUserIdUseCase from "../../usecase/account/listByUserId/listByUserId.account";
+import TransactionRepository from "../repository/transaction/transaction.repository";
+import BudgetRepository from "../repository/budget/budget.repository";
+import PotRepository from "../repository/pot/pot.repository";
 
 // Get All Accounts
 export async function listAccountsController(req: Request, res: Response) {
@@ -109,7 +112,12 @@ export async function updateAccountController(req: Request, res: Response) {
 
 // Delete Account
 export async function deleteAccountController(req: Request, res: Response) {
-  const usecase = new DeleteAccountUseCase(new AccountRepository());
+  const usecase = new DeleteAccountUseCase(
+    new AccountRepository(),
+    new TransactionRepository(),
+    new BudgetRepository(),
+    new PotRepository()
+  );
 
   try {
     const accountDto = {

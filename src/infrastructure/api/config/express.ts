@@ -8,6 +8,7 @@ import { transactionRoutes } from "../../routes/transaction.route";
 import { transactionPersonaRoutes } from "../../routes/transactionPersona.route";
 import { ASSETS_DIR } from "../../constants/path";
 import { budgetRoutes } from "../../routes/budget.route";
+import { potRoutes } from "../../routes/pot.route";
 
 export const app: Express = express();
 app.use(express.json());
@@ -26,3 +27,4 @@ accountRoutes(app);
 transactionRoutes(app);
 transactionPersonaRoutes(app);
 budgetRoutes(app);
+potRoutes(app);

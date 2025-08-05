@@ -9,6 +9,7 @@ import DeleteTransactionUseCase from "../../usecase/transaction/delete/delete.tr
 import TransactionPersonaRepository from "../repository/transactionPersona/transactionPersona.repository";
 import TransactionProcessorService from "../../service/transaction/transactionProcessor.service";
 import BudgetRepository from "../repository/budget/budget.repository";
+import PotRepository from "../repository/pot/pot.repository";
 
 // Get All Transactions By Account Id
 export async function listTransactionsByAccountIdController(
@@ -58,7 +59,8 @@ export async function createTransactionController(req: Request, res: Response) {
     new AccountRepository(),
     new TransactionRepository(),
     new TransactionPersonaRepository(),
-    new BudgetRepository()
+    new BudgetRepository(),
+    new PotRepository()
   );
 
   const usecase = new CreateTransactionUseCase(transactionProcess);
@@ -68,6 +70,7 @@ export async function createTransactionController(req: Request, res: Response) {
       account_id: req.params.account_id,
       user_id: req.body.user_id,
       budget_id: req.body.budget_id,
+      pot_id: req.body.pot_id,
       date: req.body.date,
       type: req.body.type,
       amount: req.body.amount,
@@ -86,7 +89,8 @@ export async function deleteTransactionController(req: Request, res: Response) {
   const usecase = new DeleteTransactionUseCase(
     new TransactionRepository(),
     new AccountRepository(),
-    new BudgetRepository()
+    new BudgetRepository(),
+    new PotRepository()
   );
 
   try {

@@ -10,5 +10,6 @@ export default interface TransactionRepositoryInterface
   findAllByBudgetIdForCurrentMonth(budget_id: string): Promise<Transaction[]>;
   existsWithPersona(personaId: string): Promise<boolean>;
   existsWithBudget(budgetId: string): Promise<boolean>;
+  existsWithPot(potId: string): Promise<boolean>;
   existsWithAccount(accountId: string): Promise<boolean>;
 }

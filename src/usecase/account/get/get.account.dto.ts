@@ -4,7 +4,8 @@ import { PaginatedResponse } from "../../interfaces/pagination.interface";
 type Transaction = {
   id: string;
   account_id: string;
-  budget_id: string;
+  budget_id?: string;
+  pot_id?: string;
   user_id: string;
   amount: number;
   date: Date;
@@ -15,6 +16,13 @@ type Budget = {
   id: string;
   name: string;
   maximum_amount: number;
+};
+
+type Pot = {
+  id: string;
+  name: string;
+  target_amount: number;
+  saved_amount: number;
 };
 
 export interface InputGetAccountDto {
@@ -30,6 +38,7 @@ export interface OutputGetAccountDto {
   balance: number;
   user_id: string;
   budgets: PaginatedResponse<Budget>;
+  pots: PaginatedResponse<Pot>;
   _links: {
     self: string;
     transactions: string;

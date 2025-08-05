@@ -7,7 +7,8 @@ export interface InputGetTransactionDto {
 export interface OutputGetTransactionDto {
   id: string;
   account_id: string;
-  budget_id: string;
+  budget_id?: string;
+  pot_id?: string;
   user_id: string;
   date: Date;
   type: TransactionType;

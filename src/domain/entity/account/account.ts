@@ -1,6 +1,7 @@
 import { DataValidator } from "../../../infrastructure/adapters/data-validator.adapter";
 import Entity from "../../@shared/entity/entity.abstract";
 import Budget from "../budget/budget";
+import Pot from "../pot/pot";
 import Transaction from "../transaction/transaction";
 import { TransactionType } from "../transaction/transaction.types";
 
@@ -10,6 +11,7 @@ export default class Account extends Entity {
   private _user_id: string;
   private _transactions: Transaction[];
   private _budgets: Budget[];
+  private _pots: Pot[];
 
   constructor(
     id: string,
@@ -17,7 +19,8 @@ export default class Account extends Entity {
     balance: number = 0,
     user_id: string,
     transactions: Transaction[] = [],
-    budgets: Budget[] = []
+    budgets: Budget[] = [],
+    pots: Pot[] = []
   ) {
     super();
 
@@ -27,6 +30,7 @@ export default class Account extends Entity {
     this._user_id = user_id;
     this._transactions = transactions;
     this._budgets = budgets;
+    this._pots = pots;
 
     this.validate();
   }
@@ -53,6 +57,10 @@ export default class Account extends Entity {
 
   get budgets(): Budget[] {
     return this._budgets;
+  }
+
+  get pots(): Pot[] {
+    return this._pots;
   }
 
   validate() {
@@ -111,6 +119,10 @@ export default class Account extends Entity {
 
   addBudget(budget: Budget) {
     this._budgets.push(budget);
+  }
+
+  addPot(pot: Pot) {
+    this._pots.push(pot);
   }
 
   decreaseBalance(amount: number) {

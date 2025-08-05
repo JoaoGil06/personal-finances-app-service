@@ -24,6 +24,7 @@ export default class GetTransactionUseCase {
       id: transaction.id,
       account_id: transaction.account_id,
       budget_id: transaction.budget_id,
+      pot_id: transaction.pot_id,
       user_id: transaction.user_id,
       date: transaction.date,
       type: transaction.type,

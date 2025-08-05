@@ -33,6 +33,14 @@ export default class GetAccountUseCase {
           maximum_amount: budget.maximum_amount,
         })),
       },
+      pots: {
+        items: account.pots.map((pot) => ({
+          id: pot.id,
+          name: pot.name,
+          target_amount: pot.target_amount,
+          saved_amount: pot.saved_amount,
+        })),
+      },
       _links: {
         self: baseUrl,
         transactions: `/transaction/list-by-account/${account.id}/?limit=${input.limit}&offset=${input.offset}`,
@@ -45,12 +53,13 @@ export default class GetAccountUseCase {
         items: account.transactions.map((transaction: Transaction) => ({
           id: transaction.id,
           account_id: transaction.account_id,
-          budget_id: transaction.budget_id,
+          budget_id: transaction?.budget_id ?? null,
           user_id: transaction.user_id,
           amount: transaction.amount,
           date: transaction.date,
           type: transaction.type,
           transaction_persona_id: transaction.transaction_persona_id,
+          pot_id: transaction?.pot_id ?? null,
         })),
         page: {
           total: account.getTotalTransactions(),

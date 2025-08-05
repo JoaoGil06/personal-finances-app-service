@@ -55,7 +55,7 @@ export default class Budget extends Entity {
     }
 
     if (this._account_id.length === 0) {
-      throw new Error("Budget ID is required");
+      throw new Error("Account ID is required");
     }
 
     if (!dataValidator.validateNumber(this._maximum_amount)) {

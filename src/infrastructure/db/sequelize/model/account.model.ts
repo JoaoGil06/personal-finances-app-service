@@ -9,6 +9,7 @@ import {
 import UserModel from "./user.model";
 import TransactionModel from "./transaction.model";
 import BudgetModel from "./budget.model";
+import PotModel from "./pot.model";
 
 @Table({
   tableName: "accounts",
@@ -33,4 +34,7 @@ export default class AccountModel extends Model {
 
   @HasMany(() => BudgetModel)
   declare budgets: BudgetModel[];
+
+  @HasMany(() => PotModel)
+  declare pots: PotModel[];
 }

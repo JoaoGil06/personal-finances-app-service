@@ -1,6 +1,9 @@
 import Account from "../../../domain/entity/account/account";
 import AccountFactory from "../../../domain/entity/account/factory/account.factory";
+import Budget from "../../../domain/entity/budget/budget";
 import BudgetFactory from "../../../domain/entity/budget/factory/budget.factory";
+import PotFactory from "../../../domain/entity/pot/factory/pot.factory";
+import Pot from "../../../domain/entity/pot/pot";
 import TransactionFactory from "../../../domain/entity/transaction/factory/transaction.factory";
 import AccountRepositoryInterface, {
   FindAccountOptions,
@@ -8,6 +11,7 @@ import AccountRepositoryInterface, {
 import { PaginationOptions } from "../../../domain/repository/repository-interface";
 import AccountModel from "../../db/sequelize/model/account.model";
 import BudgetModel from "../../db/sequelize/model/budget.model";
+import PotModel from "../../db/sequelize/model/pot.model";
 import TransactionModel from "../../db/sequelize/model/transaction.model";
 
 export default class AccountRepository implements AccountRepositoryInterface {
@@ -44,7 +48,7 @@ export default class AccountRepository implements AccountRepositoryInterface {
       accountModel = await AccountModel.findOne({
         /* Include -> Aliado ao @hasMany (no model)
                     - Vai fazer um JOIN e procurar na tabela Budgets onde existe o account_id com o ID */
-        include: [{ model: BudgetModel }],
+        include: [{ model: BudgetModel }, { model: PotModel }],
         where: {
           id,
         },
@@ -60,18 +64,40 @@ export default class AccountRepository implements AccountRepositoryInterface {
       balance,
       user_id,
       budgets: budgetsModel,
+      pots: potsModel,
     } = accountModel;
 
-    const budgets = budgetsModel.map((budgetModel) => {
-      const budget = BudgetFactory.create(
-        budgetModel.name,
-        budgetModel.account_id,
-        budgetModel.maximum_amount,
-        budgetModel.id
-      );
+    let budgets: Budget[] = [];
+    let pots: Pot[] = [];
 
-      return budget;
-    });
+    if (budgetsModel?.length > 0) {
+      budgets = budgetsModel.map((budgetModel) => {
+        const budget = BudgetFactory.create(
+          budgetModel.name,
+          budgetModel.account_id,
+          budgetModel.maximum_amount,
+          [],
+          budgetModel.id
+        );
+
+        return budget;
+      });
+    }
+
+    if (potsModel?.length > 0) {
+      pots = potsModel.map((potModel) => {
+        const pot = PotFactory.create(
+          potModel.name,
+          potModel.account_id,
+          potModel.target_amount,
+          potModel.saved_amount,
+          [],
+          potModel.id
+        );
+
+        return pot;
+      });
+    }
 
     const account = AccountFactory.create(
       name,
@@ -79,6 +105,7 @@ export default class AccountRepository implements AccountRepositoryInterface {
       user_id,
       [],
       budgets,
+      pots,
       account_id
     );
 
@@ -123,16 +150,37 @@ export default class AccountRepository implements AccountRepositoryInterface {
     });
 
     const accounts = accountModel.map((accountModel) => {
-      const budgets = accountModel.budgets.map((budgetModel) => {
-        const budget = BudgetFactory.create(
-          budgetModel.name,
-          budgetModel.account_id,
-          budgetModel.maximum_amount,
-          budgetModel.id
-        );
+      let budgets: Budget[] = [];
+      let pots: Pot[] = [];
 
-        return budget;
-      });
+      if (accountModel.budgets?.length > 0) {
+        budgets = accountModel.budgets.map((budgetModel) => {
+          const budget = BudgetFactory.create(
+            budgetModel.name,
+            budgetModel.account_id,
+            budgetModel.maximum_amount,
+            [],
+            budgetModel.id
+          );
+
+          return budget;
+        });
+      }
+
+      if (accountModel.pots?.length > 0) {
+        pots = accountModel.pots.map((potModel) => {
+          const pot = PotFactory.create(
+            potModel.name,
+            potModel.account_id,
+            potModel.target_amount,
+            potModel.saved_amount,
+            [],
+            potModel.id
+          );
+
+          return pot;
+        });
+      }
 
       const account = AccountFactory.create(
         accountModel.name,
@@ -140,6 +188,7 @@ export default class AccountRepository implements AccountRepositoryInterface {
         accountModel.user_id,
         [],
         budgets,
+        pots,
         accountModel.id
       );
 
@@ -164,16 +213,37 @@ export default class AccountRepository implements AccountRepositoryInterface {
     });
 
     const accounts = accountModel.map((accountModel) => {
-      const budgets = accountModel.budgets.map((budgetModel) => {
-        const budget = BudgetFactory.create(
-          budgetModel.name,
-          budgetModel.account_id,
-          budgetModel.maximum_amount,
-          budgetModel.id
-        );
+      let budgets: Budget[] = [];
+      let pots: Pot[] = [];
 
-        return budget;
-      });
+      if (accountModel.budgets?.length > 0) {
+        budgets = accountModel.budgets.map((budgetModel) => {
+          const budget = BudgetFactory.create(
+            budgetModel.name,
+            budgetModel.account_id,
+            budgetModel.maximum_amount,
+            [],
+            budgetModel.id
+          );
+
+          return budget;
+        });
+      }
+
+      if (accountModel.pots?.length > 0) {
+        pots = accountModel.pots.map((potModel) => {
+          const pot = PotFactory.create(
+            potModel.name,
+            potModel.account_id,
+            potModel.target_amount,
+            potModel.saved_amount,
+            [],
+            potModel.id
+          );
+
+          return pot;
+        });
+      }
 
       const account = AccountFactory.create(
         accountModel.name,
@@ -181,6 +251,7 @@ export default class AccountRepository implements AccountRepositoryInterface {
         accountModel.user_id,
         [],
         budgets,
+        pots,
         accountModel.id
       );
 

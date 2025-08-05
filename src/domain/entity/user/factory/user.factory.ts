@@ -7,7 +7,7 @@ export default class UserFactory {
     email: string,
     password: string,
     id = uuid()
-  ) {
+  ): User {
     return new User(id, name, email, password);
   }
 }

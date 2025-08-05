@@ -1,5 +1,6 @@
 import AccountRepositoryInterface from "../../../domain/repository/account-repository.interface";
 import BudgetRepositoryInterface from "../../../domain/repository/budget-repository.interface";
+import PotRepositoryInterface from "../../../domain/repository/pot-repository.interface";
 import TransactionRepositoryInterface from "../../../domain/repository/transaction-repository.interface";
 import {
   InputDeleteAccountDto,
@@ -10,15 +11,18 @@ export default class DeleteAccountUseCase {
   private accountRepository: AccountRepositoryInterface;
   private transactionRepository: TransactionRepositoryInterface;
   private budgetRepository: BudgetRepositoryInterface;
+  private potRepository: PotRepositoryInterface;
 
   constructor(
     accountRepository: AccountRepositoryInterface,
     transactionRepository: TransactionRepositoryInterface,
-    budgetRepository: BudgetRepositoryInterface
+    budgetRepository: BudgetRepositoryInterface,
+    potRepository: PotRepositoryInterface
   ) {
     this.accountRepository = accountRepository;
     this.transactionRepository = transactionRepository;
     this.budgetRepository = budgetRepository;
+    this.potRepository = potRepository;
   }
   async execute(input: InputDeleteAccountDto): Promise<OutputDeleteAccountDto> {
     const account = await this.accountRepository.find(input.id);
@@ -33,7 +37,9 @@ export default class DeleteAccountUseCase {
     );
     const hasBudgets = await this.budgetRepository.existsWithAccount(input.id);
 
-    if (hasTransactions || hasBudgets) {
+    const hasPots = await this.potRepository.existsWithAccount(input.id);
+
+    if (hasTransactions || hasBudgets || hasPots) {
       throw new Error(
         "Cannot delete this account: it has associated transactions or budgets."
       );

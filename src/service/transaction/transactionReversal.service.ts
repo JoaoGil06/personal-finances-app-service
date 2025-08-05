@@ -1,5 +1,6 @@
 import Account from "../../domain/entity/account/account";
 import Budget from "../../domain/entity/budget/budget";
+import Pot from "../../domain/entity/pot/pot";
 import Transaction from "../../domain/entity/transaction/transaction";
 import { TransactionType } from "../../domain/entity/transaction/transaction.types";
 
@@ -22,5 +23,9 @@ export default class TransactionReversalService {
     transaction: Transaction
   ): void {
     budget.removeTransaction(transaction.id);
+  }
+
+  static revertTransactionFromPot(pot: Pot, transaction: Transaction): void {
+    pot.removeTransaction(transaction.id);
   }
 }

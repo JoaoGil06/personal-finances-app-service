@@ -14,7 +14,8 @@ export default class TransactionRepository
       id: entity.id,
       user_id: entity.user_id,
       account_id: entity.account_id,
-      budget_id: entity.budget_id,
+      budget_id: entity.budget_id ?? null,
+      pot_id: entity.pot_id ?? null,
       date: entity.date,
       type: entity.type,
       amount: entity.amount,
@@ -50,6 +51,7 @@ export default class TransactionRepository
       user_id,
       account_id,
       budget_id,
+      pot_id,
       date,
       type,
       amount,
@@ -64,6 +66,7 @@ export default class TransactionRepository
       date,
       type,
       transaction_persona_id,
+      pot_id,
       transaction_id
     );
 
@@ -93,6 +96,7 @@ export default class TransactionRepository
         transactionModel.date,
         transactionModel.type,
         transactionModel.transaction_persona_id,
+        transactionModel.pot_id,
         transactionModel.id
       );
 
@@ -126,6 +130,7 @@ export default class TransactionRepository
         transactionModel.date,
         transactionModel.type,
         transactionModel.transaction_persona_id,
+        transactionModel.pot_id,
         transactionModel.id
       );
 
@@ -155,6 +160,14 @@ export default class TransactionRepository
     const count = await TransactionModel.count({
       where: { account_id: accountId },
     });
+    return count > 0;
+  }
+
+  async existsWithPot(potId: string): Promise<boolean> {
+    const count = await TransactionModel.count({
+      where: { pot_id: potId },
+    });
+
     return count > 0;
   }
 }
