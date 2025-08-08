@@ -1,4 +1,5 @@
 import UserRepository from "../../../infrastructure/repository/user/user.repository";
+import UserService from "../../../service/user/user.service";
 import PasswordHasherInterface from "../../interfaces/password-hasher.interface";
 import { InputUpdateUserDto, OutputUpdateUserDto } from "./update.user.dto";
 
@@ -29,6 +30,8 @@ export default class UpdateUserUseCase {
     }
 
     await this.userRepository.update(user);
+
+    await UserService.deleteCachedResults(user.id);
 
     return {
       id: user.id,

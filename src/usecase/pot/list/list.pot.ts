@@ -1,4 +1,5 @@
 import PotRepositoryInterface from "../../../domain/repository/pot-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import { buildPaginatedResponse } from "../../shared/pagination";
 import { InputListPotDto, OutputListPotDto } from "./list.pot.dto";
 
@@ -10,6 +11,9 @@ export default class ListPotsUseCase {
   }
 
   async execute(input: InputListPotDto): Promise<OutputListPotDto> {
+    const cached = await CacheService.get(`pots:${input.account_id}`);
+    if (cached) return cached;
+
     const pots = await this.potRepository.findAllByAccountId(input.account_id, {
       limit: input.limit,
       offset: input.offset,
@@ -26,7 +30,7 @@ export default class ListPotsUseCase {
 
     const baseUrl = `/pot/list-by-account/${input.account_id}`;
 
-    return buildPaginatedResponse({
+    const paginatedResponse = buildPaginatedResponse({
       items: dtoItems,
       total: pots.length,
       limit: input.limit,
@@ -36,5 +40,9 @@ export default class ListPotsUseCase {
         self: `pot/${pot.id}`,
       }),
     });
+
+    await CacheService.set(`pots:${input.account_id}`, paginatedResponse);
+
+    return paginatedResponse;
   }
 }

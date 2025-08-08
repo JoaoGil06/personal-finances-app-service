@@ -1,4 +1,5 @@
 import PotRepositoryInterface from "../../../domain/repository/pot-repository.interface";
+import PotService from "../../../service/pot/pot.service";
 import { InputUpdatePotDto, OutputUpdatePotDto } from "./update.pot.dto";
 
 export default class UpdatePotUseCase {
@@ -32,6 +33,8 @@ export default class UpdatePotUseCase {
         amount: transaction.amount,
         transaction_persona_id: transaction.transaction_persona_id,
       }));
+
+    await PotService.deleteCachedResults(pot.id, pot.account_id);
 
     return {
       id: pot.id,

@@ -1,5 +1,6 @@
 import Account from "../../domain/entity/account/account";
 import Budget from "../../domain/entity/budget/budget";
+import CacheService from "../../infrastructure/services/cache.service";
 
 export default class BudgetService {
   static assignBudgetToAccount(budget: Budget, account: Account): void {
@@ -8,5 +9,10 @@ export default class BudgetService {
     }
 
     account.addBudget(budget);
+  }
+
+  static async deleteCachedResults(budgetId: string, accountId: string) {
+    await CacheService.del(`budget:${budgetId}`);
+    await CacheService.del(`budgets:${accountId}`);
   }
 }

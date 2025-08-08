@@ -1,5 +1,6 @@
 import AccountRepositoryInterface from "../../../domain/repository/account-repository.interface";
 import TransactionRepositoryInterface from "../../../domain/repository/transaction-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import { buildPaginatedResponse } from "../../shared/pagination";
 import {
   InputListTransactionByAccountIdDto,
@@ -21,6 +22,9 @@ export default class ListTransactionsByAccountIdUseCase {
   async execute(
     input: InputListTransactionByAccountIdDto
   ): Promise<OutputListTransactionByAccountIdDto> {
+    const cached = await CacheService.get(`transactions:${input.account_id}`);
+    if (cached) return cached;
+
     const accountId = await this.accountRepository.find(input.account_id);
 
     if (!accountId) {
@@ -49,7 +53,7 @@ export default class ListTransactionsByAccountIdUseCase {
       transaction_persona_id: transaction.transaction_persona_id,
     }));
 
-    return buildPaginatedResponse({
+    const paginatedResponse = buildPaginatedResponse({
       items: dtoItems,
       total: transactions.length,
       limit: input.limit,
@@ -59,5 +63,12 @@ export default class ListTransactionsByAccountIdUseCase {
         self: `/transaction/${transaction.id}`,
       }),
     });
+
+    await CacheService.set(
+      `transactions:${input.account_id}`,
+      paginatedResponse
+    );
+
+    return paginatedResponse;
   }
 }

@@ -1,4 +1,5 @@
 import TransactionPersonaRepositoryInterface from "../../../domain/repository/transaction-persona-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import { buildPaginatedResponse } from "../../shared/pagination";
 import {
   InputListTransactionPersonaDto,
@@ -17,6 +18,9 @@ export default class ListTransactionsPersonaUseCase {
   async execute(
     input: InputListTransactionPersonaDto
   ): Promise<OutputListTransactionPersonaDto> {
+    const cached = await CacheService.get(`transactionPersona`);
+    if (cached) return cached;
+
     const transactionsPersonas =
       await this.transactionPersonaRepository.findAll({
         limit: input.limit,
@@ -31,7 +35,7 @@ export default class ListTransactionsPersonaUseCase {
       image_url: transactionPersona.image_url,
     }));
 
-    return buildPaginatedResponse({
+    const paginatedResponse = buildPaginatedResponse({
       items: dtoItems,
       total: transactionsPersonas.length,
       limit: input.limit,
@@ -41,5 +45,9 @@ export default class ListTransactionsPersonaUseCase {
         self: `/transaction-personas/${transactionPersona.id}`,
       }),
     });
+
+    await CacheService.set(`transactionPersonas`, paginatedResponse);
+
+    return paginatedResponse;
   }
 }

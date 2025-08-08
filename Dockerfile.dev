@@ -1,0 +1,21 @@
+# Build da Imagem
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copiar package.json e instalar dependências
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install
+
+# Copiar o resto do código e compilar o Typescript
+COPY . .
+RUN npm run build
+
+EXPOSE 3000
+
+ENV JWT_SECRET=super_hiper_mega_secret_token_crypt
+ENV NODE_ENV=development
+ENV PORT=3000
+
+CMD ["npm", "run", "start:dev"]

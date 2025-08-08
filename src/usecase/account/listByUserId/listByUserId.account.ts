@@ -1,5 +1,6 @@
 import AccountRepositoryInterface from "../../../domain/repository/account-repository.interface";
 import UserRepositoryInterface from "../../../domain/repository/user-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import { buildPaginatedResponse } from "../../shared/pagination";
 import {
   InputListAccountByUserIdDto,
@@ -21,6 +22,9 @@ export default class ListAccountsByUserIdUseCase {
   async execute(
     input: InputListAccountByUserIdDto
   ): Promise<OutputListAccountByUserIdDto> {
+    const cached = await CacheService.get(`accounts:${input.user_id}`);
+    if (cached) return cached;
+
     const userId = await this.userRepository.find(input.user_id);
 
     if (!userId) {
@@ -44,7 +48,7 @@ export default class ListAccountsByUserIdUseCase {
       user_id: account.user_id,
     }));
 
-    return buildPaginatedResponse({
+    const paginatedResponse = buildPaginatedResponse({
       items: dtoItems,
       total: accounts.length,
       limit: input.limit,
@@ -56,5 +60,9 @@ export default class ListAccountsByUserIdUseCase {
         budgets: `/budget/list-by-account/${account.id}?limit=20&offset=0`,
       }),
     });
+
+    await CacheService.set(`accounts:${input.user_id}`, paginatedResponse);
+
+    return paginatedResponse;
   }
 }

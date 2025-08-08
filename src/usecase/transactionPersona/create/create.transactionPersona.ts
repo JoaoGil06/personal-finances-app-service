@@ -1,5 +1,6 @@
 import TransactionPersonaFactory from "../../../domain/entity/transactionPersona/factory/transactionPersona.factory";
 import TransactionPersonaRepositoryInterface from "../../../domain/repository/transaction-persona-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import {
   InputCreateTransactionPersonaDto,
   OutputCreateTransactionPersonaDto,
@@ -23,6 +24,8 @@ export default class CreateTransactionPersonaUseCase {
     );
 
     await this.transactionPersonaRepository.create(transactionPersona);
+
+    await CacheService.del(`transactionPersonas`);
 
     return {
       id: transactionPersona.id,

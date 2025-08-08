@@ -1,4 +1,5 @@
 import UserRepositoryInterface from "../../../domain/repository/user-repository.interface";
+import UserService from "../../../service/user/user.service";
 import { InputDeleteUserDto, OutputDeleteUserDto } from "./delete.user.dto";
 
 export default class DeleteUserUseCase {
@@ -16,6 +17,8 @@ export default class DeleteUserUseCase {
     }
 
     await this.userRepository.delete(user.id);
+
+    await UserService.deleteCachedResults(user.id);
 
     return {
       id: user.id,

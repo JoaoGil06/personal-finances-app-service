@@ -1,4 +1,5 @@
 import BudgetRepositoryInterface from "../../../domain/repository/budget-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import { InputGetBudgetDto, OutputGetBudgetDto } from "./get.budget.dto";
 
 export default class GetBudgetUseCase {
@@ -9,6 +10,9 @@ export default class GetBudgetUseCase {
   }
 
   async execute(input: InputGetBudgetDto): Promise<OutputGetBudgetDto> {
+    const cached = await CacheService.get(`budget:${input.id}`);
+    if (cached) return cached;
+
     const budget = await this.budgetRepository.find(input.id);
 
     if (!budget) {
@@ -27,6 +31,8 @@ export default class GetBudgetUseCase {
         amount: transaction.amount,
         transaction_persona_id: transaction.transaction_persona_id,
       }));
+
+    await CacheService.set(`budget:${input.id}`, budget);
 
     return {
       id: budget.id,

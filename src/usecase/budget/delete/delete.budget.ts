@@ -1,5 +1,6 @@
 import BudgetRepositoryInterface from "../../../domain/repository/budget-repository.interface";
 import TransactionRepositoryInterface from "../../../domain/repository/transaction-repository.interface";
+import BudgetService from "../../../service/budget/budget.service";
 import {
   InputDeleteBudgetDto,
   OutputDeleteBudgetDto,
@@ -33,6 +34,8 @@ export default class DeleteBudgetUseCase {
     }
 
     await this.budgetRepository.delete(input.id);
+
+    await BudgetService.deleteCachedResults(budget.id, budget.account_id);
 
     return {
       id: budget.id,

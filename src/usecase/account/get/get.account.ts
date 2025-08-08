@@ -1,5 +1,6 @@
 import Transaction from "../../../domain/entity/transaction/transaction";
 import AccountRepositoryInterface from "../../../domain/repository/account-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import { InputGetAccountDto, OutputGetAccountDto } from "./get.account.dto";
 
 export default class GetAccountUseCase {
@@ -9,7 +10,21 @@ export default class GetAccountUseCase {
     this.accountRepository = accountRepository;
   }
 
+  async getCachedResult(accountId: string, includeTransactions: boolean) {
+    const cacheKey = includeTransactions
+      ? `account:withTransactions:${accountId}`
+      : `account:${accountId}`;
+
+    return await CacheService.get(cacheKey);
+  }
+
   async execute(input: InputGetAccountDto): Promise<OutputGetAccountDto> {
+    const cached = await this.getCachedResult(
+      input.id,
+      input.includeTransactions
+    );
+    if (cached) return cached;
+
     const account = await this.accountRepository.find(input.id, {
       includeTransactions: input.includeTransactions,
       limit: input.limit,
@@ -48,6 +63,10 @@ export default class GetAccountUseCase {
       },
     };
 
+    if (!input.includeTransactions) {
+      await CacheService.set(`account:${input.id}`, outputDto);
+    }
+
     if (input.includeTransactions) {
       outputDto.transactions = {
         items: account.transactions.map((transaction: Transaction) => ({
@@ -82,6 +101,13 @@ export default class GetAccountUseCase {
         );
         outputDto._links.prev = `${baseUrl}?include=transactions&limit=${outputDto.transactions.page.limit}&offset=${prev}`;
       }
+
+      // Como as transações são mais frequentes, queremos guardar apenas 5 minutos (300 segundos)
+      await CacheService.set(
+        `account:withTransactions:${input.id}`,
+        outputDto,
+        300
+      );
     }
 
     return outputDto;

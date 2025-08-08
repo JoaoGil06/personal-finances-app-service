@@ -1,3 +1,4 @@
+import CacheService from "../../../infrastructure/services/cache.service";
 import TransactionProcessorService from "../../../service/transaction/transactionProcessor.service";
 import {
   InputCreateTransactionDto,
@@ -15,6 +16,8 @@ export default class CreateTransactionUseCase {
     input: InputCreateTransactionDto
   ): Promise<OutputCreateTransactionDto> {
     const transaction = await this.transactionProcess.process(input);
+
+    await CacheService.del(`transactions:${transaction.account_id}`);
 
     return {
       id: transaction.id,

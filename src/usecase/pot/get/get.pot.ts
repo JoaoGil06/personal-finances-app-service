@@ -1,4 +1,5 @@
 import PotRepositoryInterface from "../../../domain/repository/pot-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import { InputGetPotDto, OutputGetPotDto } from "./get.pot.dto";
 
 export default class GetPotUseCase {
@@ -9,9 +10,10 @@ export default class GetPotUseCase {
   }
 
   async execute(input: InputGetPotDto): Promise<OutputGetPotDto> {
-    const pot = await this.potRepository.find(input.id);
+    const cached = await CacheService.get(`budget:${input.id}`);
+    if (cached) return cached;
 
-    console.log("[Pot]: ", pot);
+    const pot = await this.potRepository.find(input.id);
 
     if (!pot) {
       throw new Error("This pot doesnt exist.");
@@ -29,6 +31,8 @@ export default class GetPotUseCase {
         amount: transaction.amount,
         transaction_persona_id: transaction.transaction_persona_id,
       }));
+
+    await CacheService.set(`pot:${input.id}`, pot);
 
     return {
       id: pot.id,

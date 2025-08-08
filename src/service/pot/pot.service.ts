@@ -1,5 +1,6 @@
 import Account from "../../domain/entity/account/account";
 import Pot from "../../domain/entity/pot/pot";
+import CacheService from "../../infrastructure/services/cache.service";
 
 export default class PotService {
   static assignPotToAccount(pot: Pot, account: Account): void {
@@ -8,5 +9,10 @@ export default class PotService {
     }
 
     account.addPot(pot);
+  }
+
+  static async deleteCachedResults(potId: string, accountId: string) {
+    await CacheService.del(`pot:${potId}`);
+    await CacheService.del(`pots:${accountId}`);
   }
 }

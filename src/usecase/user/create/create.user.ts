@@ -1,5 +1,6 @@
 import UserFactory from "../../../domain/entity/user/factory/user.factory";
 import UserRepositoryInterface from "../../../domain/repository/user-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import PasswordHasherInterface from "../../interfaces/password-hasher.interface";
 import { InputCreateUserDto, OutputCreateUserDto } from "./create.user.dto";
 
@@ -26,6 +27,8 @@ export default class CreateUserUseCase {
     const user = UserFactory.create(input.name, input.email, passwordHash);
 
     await this.userRepository.create(user);
+
+    await CacheService.del(`users`);
 
     return {
       id: user.id,

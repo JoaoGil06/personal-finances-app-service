@@ -1,4 +1,5 @@
 import TransactionRepositoryInterface from "../../../domain/repository/transaction-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import {
   InputGetTransactionDto,
   OutputGetTransactionDto,
@@ -14,11 +15,16 @@ export default class GetTransactionUseCase {
   async execute(
     input: InputGetTransactionDto
   ): Promise<OutputGetTransactionDto> {
+    const cached = await CacheService.get(`transaction:${input.id}`);
+    if (cached) return cached;
+
     const transaction = await this.transactionRepository.find(input.id);
 
     if (!transaction) {
       throw new Error("This transaction doesnt exist.");
     }
+
+    await CacheService.set(`transaction:${input.id}`, transaction);
 
     return {
       id: transaction.id,

@@ -9,6 +9,7 @@ import { transactionPersonaRoutes } from "../../routes/transactionPersona.route"
 import { ASSETS_DIR } from "../../constants/path";
 import { budgetRoutes } from "../../routes/budget.route";
 import { potRoutes } from "../../routes/pot.route";
+import { rateLimiter } from "../../middlewares/rateLimit.middleware";
 
 export const app: Express = express();
 app.use(express.json());
@@ -19,6 +20,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Middleware para imagens static
 // ex.: http://localhost:3000/static/assets/personas/<file>
 app.use("/static/assets", express.static(ASSETS_DIR));
+
+// Middleware para implementar Rate Limit em TODAS as rotas
+app.use(rateLimiter);
 
 // Routes
 userRoutes(app);

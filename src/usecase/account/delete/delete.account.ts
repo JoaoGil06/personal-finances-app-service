@@ -2,6 +2,7 @@ import AccountRepositoryInterface from "../../../domain/repository/account-repos
 import BudgetRepositoryInterface from "../../../domain/repository/budget-repository.interface";
 import PotRepositoryInterface from "../../../domain/repository/pot-repository.interface";
 import TransactionRepositoryInterface from "../../../domain/repository/transaction-repository.interface";
+import AccountService from "../../../service/account/account.service";
 import {
   InputDeleteAccountDto,
   OutputDeleteAccountDto,
@@ -24,6 +25,7 @@ export default class DeleteAccountUseCase {
     this.budgetRepository = budgetRepository;
     this.potRepository = potRepository;
   }
+
   async execute(input: InputDeleteAccountDto): Promise<OutputDeleteAccountDto> {
     const account = await this.accountRepository.find(input.id);
 
@@ -44,6 +46,7 @@ export default class DeleteAccountUseCase {
         "Cannot delete this account: it has associated transactions or budgets."
       );
     }
+    await AccountService.deleteCachedResults(account.id, account.user_id);
 
     await this.accountRepository.delete(account.id);
 

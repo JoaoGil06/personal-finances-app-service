@@ -1,4 +1,5 @@
 import TransactionPersonaRepositoryInterface from "../../../domain/repository/transaction-persona-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import {
   InputUpdateTransactionPersonaDto,
   OutputUpdateTransactionPersonaDto,
@@ -28,6 +29,9 @@ export default class UpdateTransactionPersonaUseCase {
     if (input.image_url) transactionPersona.changeImageUrl(input.image_url);
 
     await this.transactionPersonaRepository.update(transactionPersona);
+
+    await CacheService.del(`transactionPersona:${transactionPersona.id}`);
+    await CacheService.del(`transactionPersonas`);
 
     return {
       id: transactionPersona.id,

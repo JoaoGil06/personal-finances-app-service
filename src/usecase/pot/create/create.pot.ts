@@ -1,6 +1,7 @@
 import PotFactory from "../../../domain/entity/pot/factory/pot.factory";
 import AccountRepositoryInterface from "../../../domain/repository/account-repository.interface";
 import PotRepositoryInterface from "../../../domain/repository/pot-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import PotService from "../../../service/pot/pot.service";
 import { InputCreatePotDto, OutputCreatePotDto } from "./create.pot.dto";
 
@@ -29,6 +30,8 @@ export default class CreatePotUseCase {
     PotService.assignPotToAccount(pot, account);
 
     await this.potRepository.create(pot);
+
+    await CacheService.del(`pots:${pot.account_id}`);
 
     return {
       id: pot.id,

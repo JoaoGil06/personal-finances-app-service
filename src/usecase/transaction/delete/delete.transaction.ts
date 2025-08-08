@@ -2,6 +2,7 @@ import TransactionRepositoryInterface from "../../../domain/repository/transacti
 import AccountRepository from "../../../infrastructure/repository/account/account.repository";
 import BudgetRepository from "../../../infrastructure/repository/budget/budget.repository";
 import PotRepository from "../../../infrastructure/repository/pot/pot.repository";
+import CacheService from "../../../infrastructure/services/cache.service";
 import TransactionReversalService from "../../../service/transaction/transactionReversal.service";
 import {
   InputDeleteTransactionDto,
@@ -67,6 +68,9 @@ export default class DeleteTransactionUseCase {
     }
 
     await this.transactionRepository.delete(transaction.id);
+
+    await CacheService.del(`transaction:${transaction.id}`);
+    await CacheService.del(`transactions:${transaction.account_id}`);
 
     return {
       id: transaction.id,

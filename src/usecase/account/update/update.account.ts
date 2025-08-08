@@ -1,4 +1,5 @@
 import AccountRepository from "../../../infrastructure/repository/account/account.repository";
+import AccountService from "../../../service/account/account.service";
 import {
   InputUpdateAccountDto,
   OutputUpdateAccountDto,
@@ -25,6 +26,8 @@ export default class UpdateAccountUseCase {
     if (input.name) account.changeName(input.name);
 
     await this.accountRepository.update(account);
+
+    await AccountService.deleteCachedResults(account.id, account.user_id);
 
     return {
       id: account.id,

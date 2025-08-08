@@ -1,5 +1,6 @@
 import TransactionPersonaRepositoryInterface from "../../../domain/repository/transaction-persona-repository.interface";
 import TransactionRepositoryInterface from "../../../domain/repository/transaction-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import {
   InputDeleteTransactionPersonaDto,
   OutputDeleteTransactionPersonaDto,
@@ -37,6 +38,9 @@ export default class DeleteTransactionPersonaUseCase {
     }
 
     await this.transactionPersonaRepository.delete(transactionPersona.id);
+
+    await CacheService.del(`transactionPersona:${transactionPersona.id}`);
+    await CacheService.del(`transactionPersonas`);
 
     return {
       id: transactionPersona.id,

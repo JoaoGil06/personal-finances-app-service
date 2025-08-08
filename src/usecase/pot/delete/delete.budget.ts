@@ -1,5 +1,6 @@
 import PotRepositoryInterface from "../../../domain/repository/pot-repository.interface";
 import TransactionRepositoryInterface from "../../../domain/repository/transaction-repository.interface";
+import PotService from "../../../service/pot/pot.service";
 import { InputDeletePotDto, OutputDeletePotDto } from "./delete.budget.dto";
 
 export default class DeletePotUseCase {
@@ -30,6 +31,8 @@ export default class DeletePotUseCase {
     }
 
     await this.potRepository.delete(input.id);
+
+    await PotService.deleteCachedResults(pot.id, pot.account_id);
 
     return {
       id: pot.id,

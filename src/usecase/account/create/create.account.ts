@@ -1,6 +1,7 @@
 import AccountFactory from "../../../domain/entity/account/factory/account.factory";
 import AccountRepositoryInterface from "../../../domain/repository/account-repository.interface";
 import UserRepositoryInterface from "../../../domain/repository/user-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import AccountService from "../../../service/account/account.service";
 import {
   InputCreateAccountDto,
@@ -35,6 +36,9 @@ export default class CreateAccountUseCase {
     AccountService.associateAccountWithUser(user, account);
 
     await this.accountRepository.create(account);
+
+    await CacheService.del(`accounts:${account.user_id}`);
+    await CacheService.del(`accounts`);
 
     return {
       id: account.id,

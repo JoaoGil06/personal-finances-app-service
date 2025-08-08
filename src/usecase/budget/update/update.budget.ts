@@ -1,4 +1,5 @@
 import BudgetRepositoryInterface from "../../../domain/repository/budget-repository.interface";
+import BudgetService from "../../../service/budget/budget.service";
 import {
   InputUpdateBudgetDto,
   OutputUpdateBudgetDto,
@@ -35,6 +36,8 @@ export default class UpdateBudgetUseCase {
         amount: transaction.amount,
         transaction_persona_id: transaction.transaction_persona_id,
       }));
+
+    await BudgetService.deleteCachedResults(budget.id, budget.account_id);
 
     return {
       id: budget.id,

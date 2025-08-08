@@ -1,6 +1,7 @@
 import BudgetFactory from "../../../domain/entity/budget/factory/budget.factory";
 import AccountRepositoryInterface from "../../../domain/repository/account-repository.interface";
 import BudgetRepositoryInterface from "../../../domain/repository/budget-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import BudgetService from "../../../service/budget/budget.service";
 import {
   InputCreateBudgetDto,
@@ -31,6 +32,8 @@ export default class CreateBudgetUseCase {
     BudgetService.assignBudgetToAccount(budget, account);
 
     await this.budgetRepository.create(budget);
+
+    await CacheService.del(`budgets:${budget.account_id}`);
 
     return {
       id: budget.id,

@@ -1,4 +1,5 @@
 import BudgetRepositoryInterface from "../../../domain/repository/budget-repository.interface";
+import CacheService from "../../../infrastructure/services/cache.service";
 import { buildPaginatedResponse } from "../../shared/pagination";
 import { InputListBudgetDto, OutputListBudgetDto } from "./list.budget.dto";
 
@@ -10,6 +11,9 @@ export default class ListBudgetsUseCase {
   }
 
   async execute(input: InputListBudgetDto): Promise<OutputListBudgetDto> {
+    const cached = await CacheService.get(`budgets:${input.account_id}`);
+    if (cached) return cached;
+
     const budgets = await this.budgetRepository.findAllByAccountId(
       input.account_id,
       {
@@ -29,7 +33,7 @@ export default class ListBudgetsUseCase {
 
     const baseUrl = `/budget/list-by-account/${input.account_id}`;
 
-    return buildPaginatedResponse({
+    const paginatedResponse = buildPaginatedResponse({
       items: dtoItems,
       total: budgets.length,
       limit: input.limit,
@@ -39,5 +43,9 @@ export default class ListBudgetsUseCase {
         self: `budget/${budget.id}`,
       }),
     });
+
+    await CacheService.set(`budgets:${input.account_id}`, paginatedResponse);
+
+    return paginatedResponse;
   }
 }
