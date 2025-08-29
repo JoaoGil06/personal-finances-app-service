@@ -37,6 +37,7 @@ async function setupDb() {
 
 export async function startServer(port: number = 3000) {
   await setupDb();
+  app.set("trust proxy", 1);
   app.listen(port, () => {
     console.log(`Server is listening on port: ${port} `);
   });
