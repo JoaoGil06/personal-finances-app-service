@@ -1,0 +1,28 @@
+# ---------- Build ----------
+FROM node:20-alpine AS build
+WORKDIR /app
+# Toolchain para possíveis deps nativas (ex.: bcrypt)
+RUN apk add --no-cache python3 make g++
+COPY package*.json ./
+RUN npm ci
+COPY tsconfig.json ./
+COPY src ./src
+COPY docs ./docs
+RUN npm run compile-api-docs || true
+RUN npm run build
+
+# ---------- Runtime ----------
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Só deps de runtime
+COPY package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+# Código compilado
+COPY --from=build /app/dist ./dist
+
+EXPOSE 3000
+CMD ["node", "dist/main.js"]

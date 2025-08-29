@@ -1,4 +1,4 @@
-require("dotenv").config();
+import * as dotenv from "dotenv";
 import { app } from "./express";
 import { Sequelize } from "sequelize-typescript";
 import UserModel from "../../db/sequelize/model/user.model";
@@ -7,6 +7,9 @@ import TransactionModel from "../../db/sequelize/model/transaction.model";
 import TransactionPersonaModel from "../../db/sequelize/model/transactionPersona.model";
 import BudgetModel from "../../db/sequelize/model/budget.model";
 import PotModel from "../../db/sequelize/model/pot.model";
+
+const envFile = process.env.NODE_ENV === "production" ? ".env.prod" : ".env";
+dotenv.config({ path: envFile });
 
 export let sequelize: Sequelize;
 

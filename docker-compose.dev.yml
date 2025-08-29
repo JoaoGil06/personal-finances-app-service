@@ -1,27 +1,27 @@
 services:
   db:
     image: postgres:16
-    container_name: personal-finance-db
+    container_name: personal-finance-db-dev
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: personal_finance_dev
+      POSTGRES_DB: personal_finance
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data # O nome do volume é pgdata e vai buscar os dados guardados do postgres
+      - pgdata_dev:/var/lib/postgresql/data # O nome do volume é pgdata e vai buscar os dados guardados do postgres
   redis:
     image: redis:7
-    container_name: personal-finance-redis
+    container_name: personal-finance-redis-dev
     ports:
       - "6379:6379"
     volumes:
-      - redisdata:/data
+      - redisdata_dev:/data
   app:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: personal-finances-app
+    container_name: personal-finances-app-dev
     ports:
       - "3000:3000"
     depends_on:
@@ -36,5 +36,5 @@ services:
 volumes:
   # Os volumes que são named, têm de estar aqui definidos ao mesmo nivel dos services, e cada um com ":" à frente sem nada definido
   # Os bind mounts não precisam de estar especificados aqui
-  pgdata:
-  redisdata:
+  pgdata_dev:
+  redisdata_dev:
